@@ -37,7 +37,7 @@ const Editpop = (props) => {
       axios
         .post(
           "http://localhost/RegisterEdit.php",
-          { ...values, Id: LoginId, Profile: URL.createObjectURL(imgFile) },
+          { ...values, Id: LoginId },
           {
             headers: { "Content-Type": "multipart/form-data" },
           }
@@ -65,15 +65,7 @@ const Editpop = (props) => {
     }
   }, [LoginUser]);
 
-  const [imgFile, setImgFile] = useState(null);
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImgFile(file);
-    } else {
-      setImgFile(null);
-    }
-  };
+  
   return (
     <section className="modal-wrapper">
       <div className="model-container1">
@@ -87,7 +79,7 @@ const Editpop = (props) => {
         <div>
           <form onSubmit={formik.handleSubmit}>
             <div className="subcontainer1">
-              <div className="subin">
+              {/* <div className="subin">
                 <label style={{ margin: "3% 7% 0 0%" }}>Profile:</label>
                 <div>
                  
@@ -97,7 +89,7 @@ const Editpop = (props) => {
                 {formik.errors.Name && formik.touched.Name ? (
                   <p className="form-error">{formik.errors.Name}</p>
                 ) : null}
-              </div>
+              </div> */}
               <div className="subin">
                 <label style={{ margin: "3% 9% 0 5%" }}>Bio:</label>
                 <input

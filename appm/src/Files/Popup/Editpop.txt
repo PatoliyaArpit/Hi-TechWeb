@@ -4,7 +4,9 @@ import { Edit } from "../Schema/Edit";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { updatelog } from "../redux/CartSlice";
-
+import { Dialog } from "primereact/dialog";
+import { InputText } from "primereact/inputtext";
+import Profile from "../Profile";
 const Editpop = (props) => {
   const [LoginId, setLoginId] = useState([]);
 
@@ -15,11 +17,7 @@ const Editpop = (props) => {
       setLoginId(val.Id);
     });
   }, []);
-  const [img, setimg] = useState("");
-  const handalchange = (e) => {
-    console.log("pic",e.target.files);
-    setimg(e.target.files[0]);
-  };
+
   const initial = {
     Name: "",
     Contact: "",
@@ -28,20 +26,18 @@ const Editpop = (props) => {
     Instagram: "",
     Facebook: "",
     Bio: "",
-    // Profile: "",
-
+    Profile: "",
   };
   const formik = useFormik({
     initialValues: initial,
     validationSchema: Edit,
     onSubmit: (values) => {
       dispetch(updatelog({ ...values, Id: LoginId }));
-      const formdata=new FormData()
-      formdata.append('img',img)
+    
       axios
         .post(
           "http://localhost/RegisterEdit.php",
-          { ...values, Id: LoginId,Profile:formdata},
+          { ...values, Id: LoginId, Profile: URL.createObjectURL(imgFile) },
           {
             headers: { "Content-Type": "multipart/form-data" },
           }
@@ -64,10 +60,20 @@ const Editpop = (props) => {
         Instagram: user.Instagram,
         Facebook: user.Facebook,
         Bio: user.Bio,
-        // Profile: user.Profile,
+        Profile: user.Profile,
       });
     }
   }, [LoginUser]);
+
+  const [imgFile, setImgFile] = useState(null);
+  const handleChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.type.startsWith("image/")) {
+      setImgFile(file);
+    } else {
+      setImgFile(null);
+    }
+  };
   return (
     <section className="modal-wrapper">
       <div className="model-container1">
@@ -83,17 +89,11 @@ const Editpop = (props) => {
             <div className="subcontainer1">
               <div className="subin">
                 <label style={{ margin: "3% 7% 0 0%" }}>Profile:</label>
-                <input
-                  // className="logininput"
-                  type="file"
-                  placeholder="Enter Profile"
-                  id="Profile"
-                  name="Profile"
-                  onChange={(e)=>handalchange(e)}
-                  // onChange={formik.handleChange}
-                  // value={formik.values.Profile}
-                  // onBlur={formik.handleBlur}
-                ></input>
+                <div>
+                 
+                    
+                  <input type="file" accept="image/*" onChange={handleChange} />
+                </div>
                 {formik.errors.Name && formik.touched.Name ? (
                   <p className="form-error">{formik.errors.Name}</p>
                 ) : null}
