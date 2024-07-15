@@ -4,10 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { schema1 } from "../Schema/Log";
 import { useFormik } from "formik";
-import {clearCart, fadd } from "../redux/CartSlice";
+import { clearCart, fadd } from "../redux/CartSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+
 
 const Poppop = (props) => {
   const dispatch = useDispatch();
@@ -61,8 +62,7 @@ const Poppop = (props) => {
       onSubmit: (values, { setSubmitting }) => {
         const user = Registerdata.find((user) => user.Email === values.Email);
         const Register = Registerdata.find((val) => val.Email === values.Email);
-        console.log(Registerdata);
-
+       
         if (user && user.Password === values.Password) {
           dispatch(clearCart());
           if (Logindata.Email === values.Email) {
@@ -74,34 +74,32 @@ const Poppop = (props) => {
               headers: { "Content-Type": "multipart/form-data" },
             }).then((res) => {
               console.log(res);
-            
-                props.pass(props.pass);
-                call1()
-             
+
+              props.pass(props.pass);
+              call1();
+
               navigate("/Home");
               dispatch(fadd(Register));
+              Login()
             });
-           
           }
-
-          
         } else {
           alert("Incorrect email or password. Please try again.");
         }
         setSubmitting(false);
       },
     });
-  console.log(values);
-
 
   return (
     <>
       <section className="modal-wrapper">
         <div className="model-container">
-          <button className="close" onClick={props.pass}>
-            {" "}
-            X
-          </button>
+          <div className=" position-relative">
+            <button className="close" onClick={props.pass}>
+              {" "}
+              X
+            </button>
+          </div>
           <h2>Login</h2>
           <div>
             <form onSubmit={handleSubmit}>

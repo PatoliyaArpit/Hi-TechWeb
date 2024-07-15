@@ -1,8 +1,9 @@
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { Provider, useSelector } from 'react-redux';
+import { Provider, useSelector,useDispatch } from 'react-redux';
 import store from './Files/redux/Store';
+import { url } from './Files/redux/CartSlice';
 
 const Home = lazy(() => import('./Files/Home'));
 const About = lazy(() => import('./Files/About'));
@@ -30,18 +31,46 @@ const Plan = lazy(() => import('./Files/Smallcompo/Plan'));
 const PaymentType = lazy(() => import('./Files/PaymentType'));
 
 function App() {
-  const [load, setLoad] = useState(false);
+ 
   const users = useSelector((state) => state.reg.reg);
   const userLogin = useSelector((state) => state.log.log);
   const cart = useSelector((state) => state.cart.cart);
+  const rendom = useSelector((state) => state.Rendomurl.Rendomurl);
+  // const [rendomurl, setrendomurl] = useState(generaterendomurl());
 
+  const [load, setLoad] = useState(false);
+  const [frendomurl, setFrendomurl] = useState("")
+  const dispetch=useDispatch();
   // Uncomment this block if you need to show the loader initially
-  // useEffect(() => {
-  //   setLoad(true);
-  //   setTimeout(() => {
-  //     setLoad(false);
-  //   }, 5000);
-  // }, []);
+  useEffect(() => {
+    rendom.forEach((val) => {
+      setFrendomurl(val.rendomurl);
+    });
+  }, [rendom]);
+
+  useEffect(() => {
+    setLoad(true);
+    setTimeout(() => {
+      setLoad(false);
+    }, 2000);
+  }, []);
+  // function generaterendomurl() {
+  //   const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  //   let otp = '';
+  //   for (let i = 0; i < 10; i++) {
+  //     const randomIndex = Math.floor(Math.random() * characters.length);
+  //     otp += characters[randomIndex];
+  //   }
+  //   return otp;
+  // }
+
+//  useEffect(() => {
+//     const newRendomurl = generaterendomurl();
+//     setrendomurl(newRendomurl);
+//     dispetch(url({ rendomurl: newRendomurl }));
+//   }, [dispetch]);
+
+  
 
   return (
     <Provider store={store}>
@@ -72,12 +101,13 @@ function App() {
                   <Route path="Contact" element={<Contact />} />
                   <Route path="Gimg" element={<Gimg />} />
                   <Route path="Step" element={<Step />} />
+                  {/* <Route path=":randomUrl" element={<Order />} /> */}
                   <Route path="Order" element={<Order />} />
                   <Route path="PDetails/:ids" element={<PDetails />} />
                   <Route path="Checkout" element={<Checkout />} />
                   <Route path="Header" element={<Header />} />
                   <Route path="Footer" element={<Footer />} />
-                  <Route path="success" element={<Success />} />
+                  <Route path="Suc/:randomUrl" element={<Success />} />
                   <Route path="cancel" element={<Cancel />} />
                   <Route path="Plan" element={<Plan />} />
                   {userLogin.length === 0 ? (

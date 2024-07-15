@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Formik, useFormik } from "formik";
+import {  useFormik } from "formik";
 import { Edit } from "../Schema/Edit";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { updatelog } from "../redux/CartSlice";
-import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
-import Profile from "../Profile";
+
 const Editpop = (props) => {
   const [LoginId, setLoginId] = useState([]);
 
@@ -16,7 +14,7 @@ const Editpop = (props) => {
     LoginUser.map((val) => {
       setLoginId(val.Id);
     });
-  }, []);
+  }, [LoginUser]);
 
   const initial = {
     Name: "",

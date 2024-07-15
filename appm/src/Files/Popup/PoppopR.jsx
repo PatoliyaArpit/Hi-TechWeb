@@ -8,10 +8,11 @@ import { add, fadd } from "../redux/CartSlice";
 import { schema } from "../Schema/RegisterCheck";
 import axios from "axios";
 
+
 const PoppopR = (props) => {
   const dispatch = useDispatch();
   const show = useSelector((state) => state.reg.reg);
-  // console.log(show);
+ 
   const [data, setdata] = useState([]);
 
   const call1 = () => {
@@ -40,7 +41,7 @@ const PoppopR = (props) => {
    })
   
   // console.log(check)
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit, isSubmitting } =
+  const { values, errors, touched, handleBlur, handleChange,handleSubmit, isSubmitting } =
   useFormik({
     initialValues,
     validationSchema: schema,
@@ -52,6 +53,7 @@ const PoppopR = (props) => {
           setSubmitting(true);
           props.pass(props.pass); // Assuming pass is a prop for a callback function
 
+         
           const response = await axios.post("http://localhost/Register.php", values, {
             headers: { "Content-Type": "multipart/form-data" },
           });

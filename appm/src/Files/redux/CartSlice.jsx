@@ -13,7 +13,7 @@ const initialState = {
   filtercart:[],
   Address:JSON.parse(localStorage.getItem("Address")) || [],
   Admincart:JSON.parse(localStorage.getItem("Admincart")) || [],
-  
+  Rendomurl:JSON.parse(localStorage.getItem("Rendomurl")) || [],
  
 };
 
@@ -153,11 +153,16 @@ export const cartSlice = createSlice({
     },
     cleareAddress:(state,action)=>{
       state.Address=[]
+      localStorage.removeItem("Address");
     },
     Adcart:(state,action)=>{
       state.Admincart = [{ ...action.payload }];
       localStorage.setItem("Admincart",JSON.stringify(state.Admincart))
  
+    },
+    url:(state,action)=>{
+      state.Rendomurl=[{ ...action.payload }]
+      localStorage.setItem("Rendomurl",JSON.stringify(state.Rendomurl))
     }
    
   },
@@ -183,7 +188,8 @@ export const {
   filterdata,
   Addressselect,
   cleareAddress,
-  Adcart
+  Adcart,
+  url
   
  
 } = cartSlice.actions;

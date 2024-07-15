@@ -2262,7 +2262,7 @@ text-decoration: none;
 .single-pricing .price {
   margin: 0 0 -50px;
   position: relative;
-  top: -50px;
+  top: -40px;
 }
 
 .single-pricing .price .tag {
@@ -2272,16 +2272,16 @@ text-decoration: none;
   box-shadow: 0 0 10px -3px rgb(117, 116, 117);
   color: #333333;
   display: inline-block;
-  font-size: 40px;
+  font-size: 30px;
   font-weight: 900;
-  height: 100px;
+  height: 80px;
   letter-spacing: 0;
-  line-height: 100px;
-  width: 150px;
+  line-height: 80px;
+  width: 130px;
 }
 
 .single-pricing .price .tag span {
-  font-size: 10px;
+  font-size: 15px;
 }
 
 .single-pricing .bottom {

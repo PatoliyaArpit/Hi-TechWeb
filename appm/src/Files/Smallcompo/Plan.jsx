@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../Footer";
 
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
 import { useNavigate } from "react-router-dom";
 import Header from "../Header";
@@ -12,13 +12,17 @@ import PoppopNewPass from "../Popup/PoppopNewPass";
 import Poppop from "../Popup/Poppop";
 import PoppopR from "../Popup/PoppopR";
 import { Adcart } from "../redux/CartSlice";
+import { useLocation } from "react-router-dom";
 
 const Plan = () => {
+  const { state } = useLocation();
   const [Fprice, setFprice] = useState(0);
+  const [data, serdata] = useState([]);
+  const [packdata, setpackdata] = useState([]);
   const navigate = useNavigate();
-const dispetch=useDispatch();
+  const dispetch = useDispatch();
   const show = useSelector((state) => state.plan.plan);
-  console.log(show);
+
   const final = useSelector((state) => state.log.log);
 
   const Title = localStorage.getItem("Title");
@@ -34,11 +38,9 @@ const dispetch=useDispatch();
   const Row3 = localStorage.getItem("Row3");
   const Row4 = localStorage.getItem("Row4");
 
-  const arr=[];
-  useEffect(()=>{
-    arr.push(Title,Price,Img1,Img2,Img3,Img4,Row1,Row2,Row3,Row4)
-  })
-  console.log(arr);
+  console.log("state", state.Id);
+
+  
 
   useEffect(() => {
     const Price1 = Number(Price);
@@ -46,34 +48,6 @@ const dispetch=useDispatch();
     setFprice(Finalp);
   });
 
-  const makepay = async () => {
-    const stripe = await loadStripe(
-      "pk_test_51PFvkNSF0uRd81kXkvI0KPn46KKuVWmhdcqVisa6HQ5vccNvpo4TvtuRezoLzA7UtedphYGtxfzq15nx684mYOAw005Sply1iG"
-    );
-    const body = {
-      products: show,
-    };
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    const response = await fetch(
-      "http://localhost:8080/api/create-checkout-session",
-      {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(body),
-      }
-    );
-    const session = await response.json();
-
-    const result = stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    if (result.error) {
-      console.log(result.error);
-    }
-  };
   const recoll = () => {
     setpop(true);
   };
@@ -115,10 +89,40 @@ const dispetch=useDispatch();
     setpopNewp(false);
     setpop(true);
   };
-const MoveAddress=()=>{
-  dispetch(Adcart({"Price":Price,"Finalp":Fprice,"Click":"Plan","planImg":PlanImg,"Title":Title,"quantity":quantity}))
-  navigate("/Order")
-}
+  const MoveAddress = () => {
+    dispetch(
+      Adcart({
+        Price: Price,
+        Finalp: Fprice,
+        Click: "Plan",
+        planImg: PlanImg,
+        Title: Title,
+        quantity:quantity,
+      })
+    );
+    navigate("/Order");
+  };
+
+  const call1 = () => {
+    fetch("http://localhost/pack.php")
+      .then((result) => {
+        return result.json();
+      })
+      .then((res) => {
+        serdata(res);
+      });
+  };
+  useEffect(() => {
+    call1();
+  }, []);
+
+  useEffect(() => {
+    if (state.Id && data) {
+      const Packdata = data.find((val) => val.Id === state.Id);
+      setpackdata(Packdata);
+    }
+  }, [state.Id, data]);
+  console.log(packdata, "packdata");
   return (
     <>
       <Header></Header>
@@ -159,8 +163,6 @@ const MoveAddress=()=>{
       {/* breadcumb-area-end */}
       {/* page-gallery-area-start */}
 
-     
-
       <section className="" style={{ backgroundColor: "#eee", height: "100%" }}>
         <div className="container py-5 h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
@@ -177,12 +179,15 @@ const MoveAddress=()=>{
                       </h5>
                       <hr />
                       <div className="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                        
-                          <p className="mb-0" style={{fontSize:"2rem"}}>
-                            Packege Name:{Title}
-                          </p>
-                        </div>
+                        {packdata ? (
+                          <div>
+                            <h1>{packdata.Title}</h1>
+                            <p>Price: {packdata.Price}</p>
+                            {/* Render other details of the pack */}
+                          </div>
+                        ) : (
+                          <p>Loading...</p>
+                        )}
                         <div>
                           {/* <p className="mb-0">
                         <span className="text-muted">Sort by:</span>{" "}
@@ -192,91 +197,94 @@ const MoveAddress=()=>{
                       </p> */}
                         </div>
                       </div>
-
+                      
+                      {
+                        packdata? <>
+                        <div className="card mb-3">
+                          <div className="card-body">
+                            <div className="d-flex justify-content-between">
+                              
+                              <div className="d-flex flex-row align-items-center">
+                                <div>
+                                  <img
+                                    src={packdata.Img1}
+                                    className="img-fluid rounded-3"
+                                    alt="Shopping item"
+                                    style={{ width: 65 }}
+                                  />
+                                </div>
+                                <div className="ms-3">
+                                  <h5>{packdata.Row1}</h5>
+                                  <p className="small mb-0"></p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card mb-3">
+                          <div className="card-body">
+                            <div className="d-flex justify-content-between">
+                              <div className="d-flex flex-row align-items-center">
+                                <div>
+                                  <img
+                                    src={packdata.Img2}
+                                    className="img-fluid rounded-3"
+                                    alt="Shopping item"
+                                    style={{ width: 65 }}
+                                  />
+                                </div>
+                                <div className="ms-3">
+                                  <h5>{packdata.Row2}</h5>
+                                  <p className="small mb-0"></p>
+                                </div>
+                              </div>
+                              <div className="d-flex flex-row align-items-center quantityb "></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card mb-3">
+                          <div className="card-body">
+                            <div className="d-flex justify-content-between">
+                              <div className="d-flex flex-row align-items-center">
+                                <div>
+                                  <img
+                                    src={packdata.Img3}
+                                    className="img-fluid rounded-3"
+                                    alt="Shopping item"
+                                    style={{ width: 65 }}
+                                  />
+                                </div>
+                                <div className="ms-3">
+                                  <h5>{packdata.Row3}</h5>
+                                  <p className="small mb-0"></p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card mb-3">
+                          <div className="card-body">
+                            <div className="d-flex justify-content-between">
+                              <div className="d-flex flex-row align-items-center">
+                                <div>
+                                  <img
+                                    src={packdata.Img4}
+                                    className="img-fluid rounded-3"
+                                    alt="Shopping item"
+                                    style={{ width: 65 }}
+                                  />
+                                </div>
+                                <div className="ms-3">
+                                  <h5>{packdata.Row4}</h5>
+                                  <p className="small mb-0"></p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        </>:null
+                      }
                      
-
-                      <div className="card mb-3">
-                        
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex flex-row align-items-center">
-                              <div>
-                                <img
-                                  src={Img1}
-                                  className="img-fluid rounded-3"
-                                  alt="Shopping item"
-                                  style={{ width: 65 }}
-                                />
-                              </div>
-                              <div className="ms-3">
-                                <h5>{Row1}</h5>
-                                <p className="small mb-0"></p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card mb-3">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex flex-row align-items-center">
-                              <div>
-                                <img
-                                  src={Img2}
-                                  className="img-fluid rounded-3"
-                                  alt="Shopping item"
-                                  style={{ width: 65 }}
-                                />
-                              </div>
-                              <div className="ms-3">
-                                <h5>{Row2}</h5>
-                                <p className="small mb-0"></p>
-                              </div>
-                            </div>
-                            <div className="d-flex flex-row align-items-center quantityb "></div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card mb-3">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex flex-row align-items-center">
-                              <div>
-                                <img
-                                  src={Img3}
-                                  className="img-fluid rounded-3"
-                                  alt="Shopping item"
-                                  style={{ width: 65 }}
-                                />
-                              </div>
-                              <div className="ms-3">
-                                <h5>{Row3}</h5>
-                                <p className="small mb-0"></p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="card mb-3">
-                        <div className="card-body">
-                          <div className="d-flex justify-content-between">
-                            <div className="d-flex flex-row align-items-center">
-                              <div>
-                                <img
-                                  src={Img3}
-                                  className="img-fluid rounded-3"
-                                  alt="Shopping item"
-                                  style={{ width: 65 }}
-                                />
-                              </div>
-                              <div className="ms-3">
-                                <h5>{Row4}</h5>
-                                <p className="small mb-0"></p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
                     </div>
 
                     <div className="col-lg-5 mt-5">
@@ -354,7 +362,9 @@ const MoveAddress=()=>{
                             <button
                               type="button"
                               className="btn btn-info btn-block btn-lg"
-                              onClick={() => {MoveAddress()}}
+                              onClick={() => {
+                                MoveAddress();
+                              }}
                             >
                               <Link
                                 to=""

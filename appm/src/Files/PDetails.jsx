@@ -21,6 +21,7 @@ const PDetails = () => {
   const Id = localStorage.getItem("Id");
   const ProductType = localStorage.getItem("ProductType");
   const LoginId = localStorage.getItem("LoginId");
+  const Detailtype=localStorage.getItem("Detailtype");
 
   let param = useParams();
   const cartitem = useSelector((state) => state.cart.cart);
@@ -30,6 +31,8 @@ const PDetails = () => {
   const [Totalproduct, setTotalproduct] = useState([]);
   const [cartdata, setcartdata] = useState([]);
   const [Final, setFinal] = useState([]);
+  const [Energizer,setEnergizer]=useState([])
+  const [Accessories,setAccessories]=useState([])
   
   
   const [cartcheck, setcartcheck] = useState("");
@@ -48,18 +51,18 @@ const PDetails = () => {
   useEffect(() => {
     if (LoginUser.length === 0) {
       Final.map((val) => {
-        setcartcheck(val.Id);
+        setcartcheck(val.Id,val.Title);
       });
     }
     else{
       Final.map((val)=>{
-        setcartcheck(val.ItemId)
+        setcartcheck(val.Title)
       })
     }
   });
 
   
-
+console.log(cartcheck,"Final")
   useEffect(() => {
     getdata(param.ids);
   }, [param.ids]);
@@ -114,6 +117,32 @@ const PDetails = () => {
       call2()
     });
   };
+  // const call3=()=>{
+  //   fetch("http://localhost/masterimg.php")
+  //   .then((res) => {
+  //     return res.json();
+  //   })
+  //   .then((result) => {
+  //     console.log(result, "result");
+  //     setEnergizer(result);
+  //   });
+  // }
+  // useEffect(()=>{
+  //   call3();
+  // },[])
+  // const call4=()=>{
+  //   fetch("http://localhost/Accessories.php")
+  //   .then((res) => {
+  //     return res.json();
+  //   })
+  //   .then((result) => {
+  //     console.log(result, "result");
+  //     setAccessories(result);
+  //   });
+  // }
+  // useEffect(()=>{
+  //   call4();
+  // },[])
 
   return (
     <>
@@ -203,11 +232,11 @@ const PDetails = () => {
                   </div>
                   <hr />
                   <div className="row mb-4">{/* col.// */}</div>
-                  <a href="#" className="btn btn-warning shadow-0">
+                  {/* <a href="#" className="btn btn-warning shadow-0">
                     Buy now
-                  </a>
+                  </a> */}
 
-                  {cartcheck.includes(Id) ? (
+                  {cartcheck.includes(Title) ? (
                     <a href="#" className="btn btn-primary shadow-0">
                       <i className="me-1 fa fa-shopping-basket" /> Allredy cart
                     </a>
@@ -282,32 +311,7 @@ const PDetails = () => {
                         Specification
                       </a>
                     </li>
-                    {/* <li className="nav-item d-flex" role="presentation">
-                      <a
-                        className="nav-link d-flex align-items-center justify-content-center w-100"
-                        id="ex1-tab-2"
-                        data-mdb-toggle="pill"
-                        href="#ex1-pills-2"
-                        role="tab"
-                        aria-controls="ex1-pills-2"
-                        aria-selected="false"
-                      >
-                        Warranty info
-                      </a>
-                    </li> */}
-                    {/* <li className="nav-item d-flex" role="presentation">
-                      <a
-                        className="nav-link d-flex align-items-center justify-content-center w-100"
-                        id="ex1-tab-3"
-                        data-mdb-toggle="pill"
-                        href="#ex1-pills-3"
-                        role="tab"
-                        aria-controls="ex1-pills-3"
-                        aria-selected="false"
-                      >
-                        Shipping info
-                      </a>
-                    </li> */}
+                   
                     <li className="nav-item d-flex" role="presentation">
                       <a
                         className="nav-link d-flex align-items-center justify-content-center w-100"

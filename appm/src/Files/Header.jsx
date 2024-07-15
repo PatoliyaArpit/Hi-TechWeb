@@ -31,11 +31,11 @@ const Header = (props) => {
   useEffect(() => {
     UserLogin.map((val) => {
       const firstName = val.Name.split(' ')[0];
-      const cut =firstName.slice(0,5) // Split the full name and take the first part
+      const cut =firstName.slice(0,7) // Split the full name and take the first part
       setLoginname(cut);
     });
   }, [UserLogin]);
-  console.log("Show",show)
+
   useEffect(() => {
     const names = UserLogin.map((val) => val.Name);
     setdata(names);
@@ -117,7 +117,7 @@ const Header = (props) => {
   useEffect(() => {
     call1();
   }, [props]);
-console.log("deta",data);
+
   return (
     <>
       <header className=" shadow ">
@@ -401,16 +401,16 @@ console.log("deta",data);
                     >
                       <i className="fa-solid fa-bars text-gray-600"></i>
                     </Link>
-                    <span
+                    {/* <span
                       data-toggle="modal"
                       data-target="#search_modal"
                       className="search"
                       style={{ margin: "0 -8% 0 8%" }}
                     >
                       <i className="fa fa-search" />
-                    </span>
+                    </span> */}
                     {/* search-modal-start */}
-                    <div
+                    {/* <div
                       id="search_modal"
                       className="search-modal modal fade"
                       tabIndex={-1}
@@ -418,7 +418,7 @@ console.log("deta",data);
                       aria-hidden="true"
                     >
                       <div className="modal-dialog">
-                        {/* Modal content*/}
+                        
                         <div className="modal-content">
                           <h4 className="modal-title">Type and Press Enter</h4>
                           <form action="#">
@@ -433,7 +433,7 @@ console.log("deta",data);
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                     {/* search-modal-end */}
                     <div
                       className="sc-consultant"
@@ -470,7 +470,7 @@ console.log("deta",data);
                                 style={{ margin: "0 0 0 -14px" }}
                               ></i>
                              
-                              <p >Hi.{Loginname}</p>
+                              <p >{Loginname}</p>
                             </div>
                           </Link>
                         )}

@@ -1176,7 +1176,7 @@ function Order(props) {
                             <div className="me-3 position-relative">
                               <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-secondary"></span>
                               <img
-                                src={val.PlanImg}
+                                src={val.Img}
                                 style={{ height: 96, width: 96 }}
                                 className="img-sm rounded border"
                                 alt="Product"

@@ -120,11 +120,12 @@ console.log(FinalData,"plan")
 
     setSuccpop(true);
     Order();
+    removecart();
   };
   const mackalert = () => {
     alert("Please Select Payment Methode");
   };
-console.log(FinalData,"fina");
+
   const Order = () => {
    
     FinalData.map((item) => {
@@ -134,7 +135,9 @@ console.log(FinalData,"fina");
           {
             Product: item.Title,
             UserId: LoginId,
+            ProductImg:item.Img,
             Quantity:item.quantity,
+            ProductPrice:item.Price,
             Address:Address,
             City:city,
             Pincode:Pincode,
@@ -158,12 +161,30 @@ console.log(FinalData,"fina");
           console.error("Error submitting item:", error);
         });
     });
+
+   
   };
+  const removecart=()=>{
+ axios
+    .request({
+      method: "post",
+      url: "http://localhost/FinalDelete.php",
+      data: {UserId:LoginId},
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => {
+    
+     
+    });
+  }
   useEffect(()=>{
     const date = new Date();
 
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based, so we add 1
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = monthNames[date.getMonth()]; // Months are zero-based, so we add 1
     const day = String(date.getDate()).padStart(2, '0');
     
     const hours = String(date.getHours()).padStart(2, '0');
@@ -173,7 +194,7 @@ console.log(FinalData,"fina");
     const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const dayOfWeek = daysOfWeek[date.getDay()];
     
-    const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = `${day}-${month}-${year}`;
     const formattedTime = `${hours}:${minutes}:${seconds}`;
     const formattedDay = dayOfWeek;
     setdate(formattedDate)

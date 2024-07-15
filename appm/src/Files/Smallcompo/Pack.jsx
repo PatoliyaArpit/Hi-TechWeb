@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Pack = () => {
     const [data3,setdata3]=useState([])
+    
     const dispatch=useDispatch()
     const navigate=useNavigate();
 
@@ -20,14 +21,21 @@ const Pack = () => {
       useEffect(() => {
         call3();
       }, []);
+
       const byplan = (item) => {
-        navigate("/Plan");
+       
+        navigate("/Plan",{
+          state:{
+            Id:item.Id
+          }
+          
+        });
     
         // alert("hello");
     
         localStorage.setItem("Title", item.Title);
         localStorage.setItem("Price", item.Price);
-        localStorage.setItem("PlanImg", item.PlanImg);
+        localStorage.setItem("PlanImg", item.Img);
         localStorage.setItem("quantity", item.quantity);
         localStorage.setItem("Img1", item.Img1);
         localStorage.setItem("Img2", item.Img2);
@@ -76,10 +84,10 @@ const Pack = () => {
               <h5 className="type">Consulting Pack</h5>
             </div>
             <div className="price">
-              <h2 className="tag">
+              <h4 className="tag">
                 <span>Rs</span>
                 {val.Price}
-              </h2>
+              </h4>
             </div>
             <div className="bottom">
               <ul className="feature">

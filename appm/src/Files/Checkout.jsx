@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removecart, update, pay, Adcart } from "./redux/CartSlice";
+import { removecart, update, pay, Adcart, url } from "./redux/CartSlice";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Header from "./Header";
@@ -16,7 +16,8 @@ function Checkout() {
   // Redux state
   const UserLogin = useSelector((state) => state.log.log);
   const cartItems = useSelector((state) => state.cart.cart);
-
+  const rendom = useSelector((state) => state.Rendomurl.Rendomurl);
+  // console.log(rendom, "rendom");
   // Local state
   const [Price, setPrice] = useState(0);
   const [FinalP, setFinalP] = useState(0);
@@ -24,17 +25,23 @@ function Checkout() {
   const [LoginId, setLoginId] = useState(null);
   const [Final, setFinal] = useState([]);
   const [refresh, setRefresh] = useState(false);
-
+  const [rendomurl, setRendomurl] = useState(generaterendomurl());
+  const [frendomurl, setfrendomurl] = useState("");
+// console.log(frendomurl, "rendom");
   // Fetch cart data from server
+  useState(() => {
+    rendom.map((val) => {
+      setfrendomurl(val.rendomurl);
+    });
+  }, []);
   const fetchCartData = () => {
-   fetch("http://localhost/cartshow.php")
-   .then((res)=>{
-    return res.json();
-   })
-   .then((result)=>{
-    setcartdata(result);
-   
-   })
+    fetch("http://localhost/cartshow.php")
+      .then((res) => {
+        return res.json();
+      })
+      .then((result) => {
+        setcartdata(result);
+      });
   };
 
   useEffect(() => {
@@ -89,7 +96,14 @@ function Checkout() {
   const local = () => {
     localStorage.setItem("Finalp", FinalP);
     dispatch(pay(FinalP));
-    dispatch(Adcart({"Price":Price,"Finalp":FinalP,"quantity":Final.length,"Click":"Cart"}))
+    dispatch(
+      Adcart({
+        Price: Price,
+        Finalp: FinalP,
+        quantity: Final.length,
+        Click: "Cart",
+      })
+    );
   };
 
   const returnHome = () => {
@@ -97,18 +111,21 @@ function Checkout() {
   };
 
   const handleincrease = (data) => {
-    axios.post("http://localhost/Increcart.php", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }).then((res) => {
-      fetchCartData();
-    }).catch((error) => {
-      console.error("There was an error increasing the quantity!", error);
-    });
+    axios
+      .post("http://localhost/Increcart.php", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        fetchCartData();
+      })
+      .catch((error) => {
+        console.error("There was an error increasing the quantity!", error);
+      });
   };
 
- const handledecrease = (data) => {
+  const handledecrease = (data) => {
     axios
       .post("http://localhost/Decrecart.php", data, {
         headers: {
@@ -116,30 +133,53 @@ function Checkout() {
         },
       })
       .then((res) => {
-       
         fetchCartData();
       });
-   
   };
 
   const handleDelete = (data) => {
-    axios.post("http://localhost/deletecart.php", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }).then((res) => {
-      fetchCartData();
-      fetchCartData();
-      setcartdata((prevData) => prevData.filter((item) => item.Id !== data.Id));
-      setRefresh(!refresh);
-    }).catch((error) => {
-      console.error("There was an error deleting the item!", error);
-    });
+    axios
+      .post("http://localhost/deletecart.php", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        fetchCartData();
+        fetchCartData();
+        setcartdata((prevData) =>
+          prevData.filter((item) => item.Id !== data.Id)
+        );
+        setRefresh(!refresh);
+      })
+      .catch((error) => {
+        console.error("There was an error deleting the item!", error);
+      });
   };
   // useEffect(() => {
-  //   handleDelete();
-  // }, []);
+  //   navigate(`${frendomurl}/Order`);
+  // }, [frendomurl]);
 
+  function generaterendomurl() {
+    const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let otp = '';
+    for (let i = 0; i < 10; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      otp += characters[randomIndex];
+    }
+    return otp;
+  }
+
+  useEffect(() => {
+    const newRendomurl = generaterendomurl();
+    setRendomurl(newRendomurl);
+    dispatch(url({ rendomurl: newRendomurl }));
+  }, [dispatch]);
+  
+  const movetoAddress = () => {
+    alert("hello");
+    navigate("/Order");
+  };
   return (
     <>
       <Header refresh={refresh}></Header>
@@ -208,7 +248,6 @@ function Checkout() {
                         </div>
 
                         {Final.map((item) => {
-                          
                           return (
                             <div className="card mb-3" key={item.Id}>
                               <div className="card-body">
@@ -344,8 +383,10 @@ function Checkout() {
                               onClick={local}
                             >
                               <Link
+                                // to={`/${rendomurl}`}
                                 to="/Order"
                                 className="d-flex justify-content-between text-decoration-none"
+                                // onClick={()=>movetoAddress()}
                               >
                                 <span> Total:{FinalP}</span>
                                 <span>

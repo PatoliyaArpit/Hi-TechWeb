@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addCart, clearplan } from "./redux/CartSlice";
+import { addCart, cleareAddress, clearplan } from "./redux/CartSlice";
 import { Logincart } from "./redux/CartSlice";
 
 import { useFormik } from "formik";
@@ -18,6 +18,7 @@ import "owl.carousel/dist/assets/owl.theme.default.css";
 import Pack from "./Smallcompo/Pack";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getLorem } from "./redux/Product";
 
 function Home(props) {
   useEffect(() => {
@@ -36,13 +37,21 @@ function Home(props) {
   const [Logindata, setLogindata] = useState([]);
   const [valueEnergizer, setvalueEnergizer] = useState(" ");
   const [valueaccessories, setvalueaccessories] = useState(" ");
+  const [Detailtype, setDetailtype] = useState("");
 
   const navigate = useNavigate();
-  
+
   const dispatch = useDispatch();
   const cartitem = useSelector((state) => state.cart.cart);
   const LoginUser = useSelector((state) => state.log.log);
- 
+  const lorem=useSelector((state)=>state.lorem)
+  
+//productslice
+  // console.log(lorem.data,"lorem")
+
+  // useEffect(()=>{
+  //   dispatch(getLorem())
+  //   },[])
 
   useEffect(() => {
     if (LoginUser.length === 0) {
@@ -106,9 +115,22 @@ function Home(props) {
     localStorage.setItem("Id", imgUrl.Id);
     localStorage.setItem("ProductType", imgUrl.ProductType);
     localStorage.setItem("LoginId", LoginId);
-   
-  
   };
+  useEffect(() => {
+    localStorage.removeItem("Img");
+    localStorage.removeItem("title");
+    localStorage.removeItem("price");
+    localStorage.removeItem("Capacity");
+    localStorage.removeItem("Type");
+    localStorage.removeItem("Color");
+    localStorage.removeItem("Brand");
+    localStorage.removeItem("Material");
+    localStorage.removeItem("Id");
+    localStorage.removeItem("ProductType");
+    localStorage.removeItem("LoginId");
+    dispatch(cleareAddress());
+    localStorage.removeItem("Finalp");
+  }, []);
   useEffect(() => {
     call();
   }, []);
@@ -202,33 +224,38 @@ function Home(props) {
     call6();
   }, []);
 
-  const { values, errors, touched, handleBlur, handleChange, handleSubmit,resetForm } =
-    useFormik({
-      initialValues: initialValues,
-      validationSchema: signup,
-      onSubmit: (values) => {
-        axios({
-          method: "post",
-          url: "http://localhost/mi.php",
-          data: values,
-          headers: { "Content-Type": "multipart/form-data" },
-        }).then((res) => {
-         
-          SendMsg();
-          setTimeout(() => {
-            resetForm();
-          }, 1000);
-          ;
-        });
-        // console.log(values)
-        emailjs.sendForm(
-          "service_ijeva2d",
-          "template_64nwgfr",
-          form.current,
-          "VD-BhccAQOUtoewbT"
-        );
-      },
-    });
+  const {
+    values,
+    errors,
+    touched,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    resetForm,
+  } = useFormik({
+    initialValues: initialValues,
+    validationSchema: signup,
+    onSubmit: (values) => {
+      axios({
+        method: "post",
+        url: "http://localhost/mi.php",
+        data: values,
+        headers: { "Content-Type": "multipart/form-data" },
+      }).then((res) => {
+        SendMsg();
+        setTimeout(() => {
+          resetForm();
+        }, 1000);
+      });
+      // console.log(values)
+      emailjs.sendForm(
+        "service_ijeva2d",
+        "template_64nwgfr",
+        form.current,
+        "VD-BhccAQOUtoewbT"
+      );
+    },
+  });
   useEffect(() => {
     setmodel(false);
     setTimeout(() => {
@@ -252,7 +279,6 @@ function Home(props) {
         },
       })
       .then((res) => {
-      
         call5();
       });
   };
@@ -267,11 +293,15 @@ function Home(props) {
         },
       })
       .then((res) => {
-       
         call5();
       });
     // dispatch(LoginCart({data}))
   };
+  useEffect(() => {
+    localStorage.removeItem("Detailtype");
+  }, []);
+
+ 
   return (
     <div>
       <>
@@ -456,8 +486,6 @@ function Home(props) {
                   let Convert = Number(Price);
                   let Total = Convert + TotalDiscount;
 
-                  
-
                   return (
                     <div className="col-lg-4 col-sm-6 col-md-6 col-12" key={Id}>
                       <div className="single-service">
@@ -466,7 +494,10 @@ function Home(props) {
                             to={{
                               pathname: `/PDetails/${Id}`,
                             }}
-                            onClick={() => handleClick(val)}
+                            onClick={() => {
+                              handleClick(val);
+                              localStorage.setItem("Detailtype", "Energizer");
+                            }}
                           >
                             <img src={Img} alt="" />
                           </Link>
@@ -530,7 +561,7 @@ function Home(props) {
                                         Title,
                                         Price,
                                         quantity: 1,
-                                        ProductType
+                                        ProductType,
                                       })
                                     );
                                     call5();
@@ -591,7 +622,11 @@ function Home(props) {
                             to={{
                               pathname: `/PDetails/${Id}`,
                             }}
-                            onClick={() => handleClick(val)}
+                            onClick={() => {
+                              handleClick(val);
+
+                              localStorage.setItem("Detailtype", "Accessories");
+                            }}
                           >
                             <img src={Img} alt="" />
                           </Link>
@@ -655,7 +690,7 @@ function Home(props) {
                                         Title,
                                         Price,
                                         quantity: 1,
-                                        ProductType
+                                        ProductType,
                                       })
                                     );
                                     call5();
@@ -945,8 +980,6 @@ function Home(props) {
 
           <Pack></Pack>
 
-         
-
           <div
             className="contact-details-area"
             // style={{ display: "grid", gridTemplateColumns: "auto auto auto" }}
@@ -1226,7 +1259,7 @@ function Home(props) {
                   </div>
                 </div>
 
-                 <div className="col-lg-6 col-12 d-flex flex-column justify-content-center  mt-lg-0 ">
+                <div className="col-lg-6 col-12 d-flex flex-column justify-content-center  mt-lg-0 ">
                   <div className="sdsw-contact sd-sidebar-widget">
                     <h4 className="title">Contact Info</h4>
                     <div className="sdswc-info-box d-flex align-items-center mb-5">
@@ -1287,7 +1320,7 @@ function Home(props) {
                       </div>
                     </div>
                   </div>
-                </div> 
+                </div>
               </div>
             </div>
           </div>

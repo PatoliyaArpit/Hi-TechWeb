@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import {  useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { clearCart } from "./redux/CartSlice";
 import axios from "axios";
 
@@ -14,46 +14,58 @@ const Sucess = () => {
   const [cartdata, setcartdata] = useState([]);
   const [LoginId, setLoginId] = useState([]);
   const [Final, setFinal] = useState([]);
+  const [FinalData, setFinalData] = useState([]);
+  const [cartplan, setcartplan] = useState("");
+  const [Address, setAddress] = useState("");
+  const [City, setCity] = useState("");
+  const [Pincode, setPincode] = useState("");
+  const [FName, setFName] = useState("");
+  const [LName, setLName] = useState("");
+  const [date, setdate] = useState("");
+  const [Time, setTime] = useState("");
+  const [Day, setDay] = useState("");
+  const [Paymentmethode, setPaymentmethode] = useState("Card");
+  const plancart = useSelector((state) => state.Admincart.Admincart);
+  const Plan = useSelector((state) => state.plan.plan);
+  const SelectAddress = useSelector((state) => state.Address.Address);
 
   useEffect(() => {
     UserLogin.map((val) => {
       setLoginId(val.Id);
     });
   }, []);
-
-  
+  useEffect(() => {
+    SelectAddress.map((val) => {
+      setAddress(val.Addressd);
+      setCity(val.City);
+      setPincode(val.Pincode);
+      setFName(val.FName);
+      setLName(val.LName);
+    });
+  });
+  useEffect(() => {
+    plancart.map((val) => {
+      setcartplan(val.Click);
+    });
+  }, [plancart]);
 
   useEffect(() => {
     if (LoginId !== null) {
       const Finalcart = cartdata.filter((val) => val.UserId === LoginId);
-      const MergeTitle = Finalcart.map(item => item.Title).join(', '); 
-      setFinal(MergeTitle);
+      setFinal(Finalcart);
     }
   }, [cartdata, LoginId]);
-
-  console.log(Final)
   useEffect(() => {
-    if (LoginId !== null && Final !== "") {
-      axios.request({
-        method: "post",
-        url: "http://localhost/Order.php",
-        data: { UserId: LoginId, Product: Final },
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        // Redirect to another page upon successful request
-      
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
+    if (cartplan === "Cart") {
+      setFinalData(Final);
+    } else {
+      setFinalData(Plan);
     }
-  }, [LoginId, Final]);
-  
-  
- const call1 = () => {
+  }, [cartplan, Final, Plan]);
+
+  console.log(SelectAddress, "address");
+
+  const call1 = () => {
     fetch("http://localhost/cartshow.php")
       .then((res) => {
         return res.json();
@@ -64,23 +76,91 @@ const Sucess = () => {
   };
   useEffect(() => {
     call1();
-  }, []); 
+  }, []);
 
-//   setTimeout(() => {
-//     window.localStorage.removeItem("cart");
-//     navigat("/");
-//     dispetch(clearCart());
-//   }, 3000);
+  const removecart = () => {
+    axios
+      .request({
+        method: "post",
+        url: "http://localhost/FinalDelete.php",
+        data: { UserId: LoginId },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {});
+  };
 
-//   axios
-//   .post("http://localhost/Cartallclear.php", {
-   
-//   }, {
-//     headers: {
-//       "Content-Type": "multipart/form-data"
-//     }
-//   })
- 
+  useEffect(() => {
+    FinalData.map((item) => {
+      axios
+        .post(
+          "http://localhost/Order.php",
+          {
+            Product: item.Title,
+            UserId: LoginId,
+            ProductImg: item.Img,
+            Quantity: item.quantity,
+            ProductPrice:item.Price,
+            Address: Address,
+            City: City,
+            Pincode: Pincode,
+            FName: FName,
+            LName: LName,
+            Date: date,
+            Time: Time,
+            Day: Day,
+            PaymentMethode: Paymentmethode,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          removecart();
+          console.log("Item submitted:", res.data);
+        })
+        .catch((error) => {
+          console.error("Error submitting item:", error);
+        });
+    });
+  }, [FinalData]);
+
+  useEffect(()=>{
+    const date = new Date();
+
+    const year = date.getFullYear();
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const month = monthNames[date.getMonth()]; // Months are zero-based, so we add 1
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const dayOfWeek = daysOfWeek[date.getDay()];
+    
+    const formattedDate = `${day}-${month}-${year}`;
+    const formattedTime = `${hours}:${minutes}:${seconds}`;
+    const formattedDay = dayOfWeek;
+    setdate(formattedDate)
+    setTime(formattedTime)
+    setDay(formattedDay)
+    console.log(`Date: ${formattedDate}`);
+    console.log(`Time: ${formattedTime}`);
+    console.log(`Day: ${formattedDay}`);
+    
+  },[])
+
+  // const makePaymentCard=()=>{
+  //   navigat("/")
+
+  //   Order()
+  //   // removecart()
+  // }
 
   return (
     <div className="container">
@@ -124,7 +204,7 @@ const Sucess = () => {
               details shortly.
             </p>
             <Link style={{ margin: "5% 0 0 0" }} to="/" className="links">
-              Move to Home
+              Back to Home
             </Link>
           </div>
         </div>
