@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import Loader from "../Loader";
+
 import { cleareAddress } from "../redux/CartSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Loader from "../Smallcompo/Loader";
 
 const Orderplaced = (props) => {
   const navigator = useNavigate();

@@ -1,22 +1,40 @@
+import { isCancel } from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useReactToPrint } from "react-to-print";
+import { getOrder } from "../redux/Order/Order";
 
-function PopBill(props) {
+function PopBill({ isOpen, onClose }) {
+  const dispatch = useDispatch();
+  const orderdata = useSelector((state) => state.Order);
+
   const [Order, setOrder] = useState([]);
   const [FilterOrder, setFilterOrder] = useState([]);
   const orderId = localStorage.getItem("OrderId");
   const componentRef = useRef();
-
-  const call1 = () => {
-    fetch("http://localhost/Ordershow.php")
-      .then((res) => res.json())
-      .then((result) => setOrder(result));
-  };
-
+  console.log(Order, "bill");
+ 
   useEffect(() => {
-    call1();
-  }, []);
+    
+    setOrder(orderdata.data);
+  }, [dispatch, orderdata]);
+
+  useEffect(()=>{
+    dispatch(getOrder());
+  },[dispatch])
+  // const call=()=>{
+  //       fetch("http://localhost/Ordershow.php")
+  //       .then((result)=>{
+  //         return result.json()
+  //       })
+  //       .then((res)=>{
+  //         setOrder(res)
+  //       })
+  // }
+  // useEffect(()=>{
+  // call()
+  // },[dispatch])
 
   useEffect(() => {
     const filteredOrder = Order.filter((val) => val.Id === orderId);
@@ -24,11 +42,14 @@ function PopBill(props) {
   }, [Order, orderId]);
 
   const handlePrint = useReactToPrint({
+  
     content: () => componentRef.current,
+    
   });
+  console.log(handlePrint,"print")
 
   return (
-    <section className="modal-wrapperbill">
+    <section className={`modal-wrapperbill ${isOpen ? "" : "hidden"}`}>
       <div className="model-containerbill">
         <button
           type="button"
@@ -36,7 +57,7 @@ function PopBill(props) {
           data-bs-dismiss="modal"
           aria-label="Close"
           style={{ margin: "0 0 0 100%" }}
-          onClick={props.pass}
+          onClick={onClose}
         ></button>
         {FilterOrder.map((val) => {
           return (
@@ -164,9 +185,7 @@ function PopBill(props) {
                           <div className="row my-2">
                             <div className="col-7 text-right">Tax (10%)</div>
                             <div className="col-5">
-                              <span className="text-110 text-secondary-d1">
-                                null
-                              </span>
+                              <span className="text-110 text-secondary-d1"></span>
                             </div>
                           </div>
                           <div className="row my-2 align-items-center bgc-primary-l3 p-2">

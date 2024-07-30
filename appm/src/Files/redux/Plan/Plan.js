@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const getLorem = createAsyncThunk(
-  'lorem/getdata',
+export const getplan = createAsyncThunk(
+  'plan/getdata',
   async (arg, { rejectWithValue }) => {
     try {
-      const {data}  = await axios.post('http://localhost/masterimg.php');
-      console.log(data, 'data');
+      const {data}  = await axios.post('http://localhost/Pack_detail.php');
+    
       return data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -14,8 +14,8 @@ export const getLorem = createAsyncThunk(
   }
 );
 
-const loremSlice = createSlice({
-  name: 'lorem',
+const PlanSlice = createSlice({
+  name: 'plan',
   initialState: {
     data: [],
     isSuccess: false,
@@ -25,15 +25,15 @@ const loremSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getLorem.pending, (state) => {
+      .addCase(getplan.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getLorem.fulfilled, (state, action) => {
+      .addCase(getplan.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
         state.isSuccess = true;
       })
-      .addCase(getLorem.rejected, (state, action) => {
+      .addCase(getplan.rejected, (state, action) => {
         state.loading = false;
         state.message = action.payload;
         state.isSuccess = false;
@@ -41,4 +41,4 @@ const loremSlice = createSlice({
   },
 });
 
-export default loremSlice.reducer;
+export default PlanSlice.reducer;

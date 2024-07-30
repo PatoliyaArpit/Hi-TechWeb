@@ -871,7 +871,7 @@ text-decoration: none;
 .logo {
   /* padding: 20px 0; */
   margin: 10px 0 0 0;
-  width: 130px;
+  width: 120px;
 }
 
 .logo a {
@@ -1113,11 +1113,14 @@ text-decoration: none;
 .search-consultant {
   padding: 18px 0;
   text-align: right;
+
 }
 
 .sc-search {
   display: inline-block;
-  margin-right: 24px;
+  /* margin-right: 24px; */
+  display: grid;
+  grid-template-columns: auto auto ;
 }
 
 .sc-search span {
@@ -1203,6 +1206,7 @@ text-decoration: none;
 
 .sc-consultant {
   display: inline-block;
+  
 }
 
 .sc-consultant .link {
@@ -1859,7 +1863,7 @@ text-decoration: none;
 
 .single-service .content .title {
   color: #333333;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 400;
   letter-spacing: 0;
   line-height: 28px;
@@ -6229,7 +6233,7 @@ text-decoration: none;
 }
 
 .bullet-list li::before {
-  background-color: #3FB698;
+  background-color: #3fb698;
   border-radius: 50%;
   content: "";
   display: inline-block;
@@ -6280,7 +6284,7 @@ text-decoration: none;
   -moz-border-left-colors: none;
   -moz-border-right-colors: none;
   -moz-border-top-colors: none;
-  border-color: #3FB698;
+  border-color: #3fb698;
   -o-border-image: none;
   border-image: none;
   border-style: solid;
@@ -6306,7 +6310,7 @@ text-decoration: none;
 }
 
 .plus-list li::before {
-  background-color: #3FB698;
+  background-color: #3fb698;
   color: #fff;
   content: "+";
   display: inline-block;
@@ -6334,7 +6338,7 @@ text-decoration: none;
 }
 
 .plus-list-2 li::before {
-  background-color: #3FB698;
+  background-color: #3fb698;
   border-radius: 50%;
   color: #fff;
   content: "+";

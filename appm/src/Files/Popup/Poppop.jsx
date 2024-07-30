@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import {  useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { schema1 } from "../Schema/Log";
 import { useFormik } from "formik";
 import { clearCart, fadd } from "../redux/CartSlice";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 
 const Poppop = (props) => {
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.reg.reg);
-  const show = useSelector((state) => state.log.log);
+
 
   const navigate = useNavigate();
-  const [data, setdata] = useState();
+  
   const Login = () => {
     toast.success("Login Successfull", {
       position: "top-center",
@@ -78,9 +77,9 @@ const Poppop = (props) => {
               props.pass(props.pass);
               call1();
 
-              navigate("/Home");
+              navigate("/");
               dispatch(fadd(Register));
-              Login()
+               Login()
             });
           }
         } else {

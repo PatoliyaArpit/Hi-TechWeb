@@ -1,21 +1,21 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-export const getLorem = createAsyncThunk(
-  'lorem/getdata',
+export const getcart = createAsyncThunk(
+  'Cart/getdata',
   async (arg, { rejectWithValue }) => {
     try {
-      const {data}  = await axios.post('http://localhost/masterimg.php');
-      console.log(data, 'data');
+      const {data}  = await axios.post('http://localhost/cartshow.php');
+    
       return data;
+      
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
 
-const loremSlice = createSlice({
-  name: 'lorem',
+const CartdataSlice = createSlice({
+  name: 'Cartdata',
   initialState: {
     data: [],
     isSuccess: false,
@@ -25,15 +25,15 @@ const loremSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getLorem.pending, (state) => {
+      .addCase(getcart.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getLorem.fulfilled, (state, action) => {
+      .addCase(getcart.fulfilled, (state, action) => {
         state.loading = false;
         state.data = action.payload;
         state.isSuccess = true;
       })
-      .addCase(getLorem.rejected, (state, action) => {
+      .addCase(getcart.rejected, (state, action) => {
         state.loading = false;
         state.message = action.payload;
         state.isSuccess = false;
@@ -41,4 +41,4 @@ const loremSlice = createSlice({
   },
 });
 
-export default loremSlice.reducer;
+export default CartdataSlice.reducer;

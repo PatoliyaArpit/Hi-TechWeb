@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { updatelog } from "../redux/CartSlice";
 
-const Editpop = (props) => {
+const Editpop = ({isOpen, onClose }) => {
   const [LoginId, setLoginId] = useState([]);
 
   const dispetch = useDispatch();
@@ -41,7 +41,7 @@ const Editpop = (props) => {
           }
         )
         .then((res) => {
-          props.pass(props.pass);
+          // props.pass(props.pass);
         });
     },
   });
@@ -65,9 +65,9 @@ const Editpop = (props) => {
 
   
   return (
-    <section className="modal-wrapper">
+    <section className={`modal-wrapper ${isOpen?" ":"hidden"}`}>
       <div className="model-container1">
-        <button className="close" onClick={props.pass}>
+        <button className="close" onClick={onClose}>
           {" "}
           X
         </button>

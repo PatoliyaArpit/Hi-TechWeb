@@ -63,7 +63,7 @@
     meanmenu 
     -----------------*/
     $('nav#mobile_menu_active').meanmenu({
-        meanScreenWidth: "991",
+        meanScreenWidth: "999",
         meanMenuContainer: '.menu',
     });
 
@@ -73,7 +73,7 @@
     $(window).on('resize', function () {
         var wWidth = $(this).width();
 
-        if (wWidth < 991) {
+        if (wWidth < 1200) {
             // removing class
             $('.drop').addClass('m-d-removed');
             $('.m-d-removed').removeClass('drop');

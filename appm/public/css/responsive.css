@@ -97,16 +97,12 @@
    
     .sdsw-contact{
       width: 500px;
-      height: 62%px;
+      height: 62%;
       margin: 0 0 10% 1%;
       
     }
-    .sc-search {
-      margin-right: 0;
-    }
-    .sc-consultant .link {
-      padding: 12px 6px;
-    }
+   
+    
     .lt-language .current,
     .lt-time .time,
     .ap-address .address,
@@ -241,35 +237,21 @@
   @media only screen and (min-width: 768px) and (max-width: 992px) {
     /*home1*/
  
-    .sc-consultant{
-      margin: 0 0 10% 10%;
-      float: right;
-      width: 40vh;
-      /* background-color: aqua; */
-    }
+    
+      
+    
     .logo{
       width: 100px;
     }
-    .menu-area{
-      height: 100px;
-      display: grid;
-      grid-template-columns: auto auto;
-    }
-    .sc-search{
-      width: 20vh;
-     
-      /* margin: 0 0 2% 0%; */
-      float: right;
-    }
-    .search i{
-      margin: 0 0 0 100px;
-    }
-    .Login{
+   
+   
+    
+    /* .Login{
       margin-right: -250px;
     }
     .cart{
       margin-left: 200px;
-    }
+    } */
     .menu-area.navbar-fixed-top {
       animation: 0s ease 0s normal none 1 running none;
       box-shadow: none;
@@ -460,11 +442,11 @@
     /*home1*/
 
    
-    .sc-consultant{
+    /* .sc-consultant{
       margin: 0 0 10% 20%;
       float: right;
       width: 30vh;
-      /* background-color: aqua; */
+     
       
     }
     .search i{
@@ -475,7 +457,7 @@
     }
     .cart{
       margin-left: 20%;
-    }
+    } */
     .menu-area.navbar-fixed-top {
       animation: 0s ease 0s normal none 1 running none;
       box-shadow: none;
@@ -678,23 +660,28 @@
 
   /* Small Mobile Layout: 480px. */
 
-  @media only screen and (min-width: 240px) and (max-width: 600px) {
+  
+  @media only screen and (min-width: 240px) and (max-width: 575px) {
+    
+    /*home1*/
+    /* .sc-consultant{
+      margin: 0 0 10% 0%;
+      float: right;
+      width: 20vh;
+     
+      
+    } */
+    .textfix{
+      min-height: auto;
+      font-size: 5rem;
+    }
+    .search-consultant {
+      margin-left: 100px;
+    }
     .sdsw-contact{
       width: 500px;
       height: 300px;
       margin: 0 0 10% 0;
-      
-    }
-    
-  }
-  @media only screen and (min-width: 240px) and (max-width: 575px) {
-    
-    /*home1*/
-    .sc-consultant{
-      margin: 0 0 10% 0%;
-      float: right;
-      width: 20vh;
-      /* background-color: aqua; */
       
     }
     .search i{
@@ -1098,11 +1085,14 @@
 
   /*big from small mobile, small from wide mobile*/
 
-  @media only screen and (min-width: 380px) and (max-width: 480px) {
+  @media only screen and (min-width: 375px) and (max-width: 480px) {
     /*home1*/
    
     .to-down {
       bottom: 12px;
+    }
+    .textfix{
+      min-height: auto;
     }
     .to-down a img {
       height: 22px;
@@ -1138,4 +1128,3 @@
     }
    
   }
-  

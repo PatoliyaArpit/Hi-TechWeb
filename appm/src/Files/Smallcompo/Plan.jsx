@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 
 import { Link } from "react-router-dom";
-import Footer from "../Footer";
-
+import Header from "../Components/Header";
+import Footer from "../Components/Footer";
 import { useSelector, useDispatch } from "react-redux";
-import { loadStripe } from "@stripe/stripe-js";
 import { useNavigate } from "react-router-dom";
-import Header from "../Header";
+
 import PoppopEmail from "../Popup/PoppopEmail";
 import PoppopNewPass from "../Popup/PoppopNewPass";
 import Poppop from "../Popup/Poppop";
@@ -16,45 +15,37 @@ import { useLocation } from "react-router-dom";
 
 const Plan = () => {
   const { state } = useLocation();
+  console.log(state,"state000000000000")
   const [Fprice, setFprice] = useState(0);
-  const [data, serdata] = useState([]);
+  const [Data, setData] = useState([]);
   const [packdata, setpackdata] = useState([]);
+
   const navigate = useNavigate();
   const dispetch = useDispatch();
   const show = useSelector((state) => state.plan.plan);
+  const UserLogin = useSelector((state) => state.log.log);
 
   const final = useSelector((state) => state.log.log);
 
-  const Title = localStorage.getItem("Title");
-  const Price = localStorage.getItem("Price");
-  const PlanImg = localStorage.getItem("PlanImg");
-  const quantity = localStorage.getItem("quantity");
-  const Img1 = localStorage.getItem("Img1");
-  const Img2 = localStorage.getItem("Img2");
-  const Img3 = localStorage.getItem("Img3");
-  const Img4 = localStorage.getItem("Img4");
-  const Row1 = localStorage.getItem("Row1");
-  const Row2 = localStorage.getItem("Row2");
-  const Row3 = localStorage.getItem("Row3");
-  const Row4 = localStorage.getItem("Row4");
-
-  console.log("state", state.Id);
-
-  
-
-  useEffect(() => {
-    const Price1 = Number(Price);
-    const Finalp = Price1 + 100;
-    setFprice(Finalp);
-  });
-
-  const recoll = () => {
-    setpop(true);
-  };
   const [pop, setpop] = useState(false);
   const [popR, setpopR] = useState(false);
   const [popEmail, setpopEmail] = useState(false);
   const [popNewp, setpopNewp] = useState(false);
+  const [plandata, setplandata] = useState([]);
+  const [Quantity, setQuantity] = useState(1);
+  const [filterplan, setfilterplan] = useState([]);
+  const [planPrice, setplanPrice] = useState("");
+
+  useEffect(() => {
+    const Price1 = Number(planPrice * Quantity);
+    const Finalp = Price1 + 0;
+    setFprice(Finalp);
+  });
+  
+
+  const recoll = () => {
+    setpop(true);
+  };
 
   const btn = () => {
     setpop(false);
@@ -92,37 +83,70 @@ const Plan = () => {
   const MoveAddress = () => {
     dispetch(
       Adcart({
-        Price: Price,
+        Price: planPrice * Quantity,
         Finalp: Fprice,
         Click: "Plan",
-        planImg: PlanImg,
-        Title: Title,
-        quantity:quantity,
+        Img: state.Img,
+        Title: state.Title,
+        quantity: Quantity,
       })
     );
     navigate("/Order");
   };
 
-  const call1 = () => {
+  const fetchData = async () => {
+    try {
+      const response = await fetch("http://localhost/Pack_detail.php");
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (state?.Title && Data.length) {
+      const Pack = Data.filter((val) => val.Main_title === state.Title);
+
+      setpackdata(Pack);
+    }
+  }, [state, Data]);
+  const call3 = () => {
     fetch("http://localhost/pack.php")
       .then((result) => {
         return result.json();
       })
       .then((res) => {
-        serdata(res);
+        setplandata(res);
       });
   };
-  useEffect(() => {
-    call1();
-  }, []);
 
   useEffect(() => {
-    if (state.Id && data) {
-      const Packdata = data.find((val) => val.Id === state.Id);
-      setpackdata(Packdata);
-    }
-  }, [state.Id, data]);
-  console.log(packdata, "packdata");
+    call3();
+  }, []);
+  useEffect(() => {
+    const filterplan = plandata.filter((val) => val.Title === state.Title);
+    filterplan.map((val) => {
+      setplanPrice(val.Price);
+    });
+    setfilterplan(filterplan);
+  }, [plandata]);
+ 
+
+  const handleincrease = () => {
+    setQuantity(Quantity + 1);
+  };
+  const handledecrease = () => {
+    if (Quantity > 1) {
+      setQuantity(Quantity - 1);
+  }
+  };
+
+ 
   return (
     <>
       <Header></Header>
@@ -135,31 +159,7 @@ const Plan = () => {
       {popNewp ? (
         <PoppopNewPass pass={Newpass} pass2={Newpass2}></PoppopNewPass>
       ) : null}
-      <div className="breadcumb-area bg-with-black">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="breadcumb">
-                <h2 className="name">Hi-Tech Kit</h2>
-                <ul className="links">
-                  <li>
-                    {/* <a href="index.html">Home</a> */}
-                    <Link as="Link" className="links" to="/">
-                      Home
-                    </Link>
-                  </li>
 
-                  <li>
-                    <a href="11_gallery-cobbles.html" className="links">
-                      Hi-Tech Kit
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       {/* breadcumb-area-end */}
       {/* page-gallery-area-start */}
 
@@ -178,119 +178,113 @@ const Plan = () => {
                         </Link>
                       </h5>
                       <hr />
-                      <div className="d-flex justify-content-between align-items-center mb-4">
-                        {packdata ? (
-                          <div>
-                            <h1>{packdata.Title}</h1>
-                            <p>Price: {packdata.Price}</p>
-                            {/* Render other details of the pack */}
-                          </div>
-                        ) : (
-                          <p>Loading...</p>
-                        )}
-                        <div>
-                          {/* <p className="mb-0">
-                        <span className="text-muted">Sort by:</span>{" "}
-                        <a href="#!" className="text-body">
-                          price <i className="fas fa-angle-down mt-1" />
-                        </a>
-                      </p> */}
+
+                      {/* <div className="shadow PlanTitle">
+                        <div className=" ">
+                          <h2>
+                            {" "}
+                            Pack Name:<span>{state.Title}</span>
+                          </h2>
+                          <p style={{ display: "flex" }}>
+                            Price: <span>{state.Price}</span>
+                          </p>
                         </div>
+                      </div> */}
+                      {filterplan.map((val) => {
+                        return (
+                          <div className="card mb-3 shadow">
+                            <div className="card-body">
+                              <div className="d-flex justify-content-between">
+                                <div className="d-flex flex-row align-items-center">
+                                  <div>
+                                    <img
+                                      src={val.Img}
+                                      className="img-fluid rounded-3"
+                                      alt="Shopping item"
+                                      style={{ width: 65 }}
+                                    />
+                                  </div>
+                                  <div className="ms-3">
+                                    <h5>{val.Title}</h5>
+                                    <p className="small mb-0"></p>
+                                  </div>
+                                </div>
+                                <div className="d-flex flex-row align-items-center quantityb ">
+                                  <button
+                                    className="incredecre"
+                                    onClick={() => {
+                                      if (UserLogin.length > 0) {
+                                        handledecrease();
+                                      } else {
+                                        // decrease(item.Id);
+                                      }
+                                    }}
+                                  >
+                                    -
+                                  </button>
+
+                                  <div style={{ width: 50 }}>
+                                    <h5 className="fw-normal mb-0">
+                                      {Quantity}
+                                    </h5>
+                                  </div>
+                                  <button
+                                    className="incredecre"
+                                    onClick={() => {
+                                      if (UserLogin.length > 0) {
+                                        handleincrease();
+                                      } else {
+                                        // increase(val.Id);
+                                      }
+                                    }}
+                                  >
+                                    +
+                                  </button>
+                                  <div style={{ width: 80 }}>
+                                    <h5 className="mb-0">
+                                      {Quantity * val.Price}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+
+                      <div className="container shadow p-6 Planheading mb-4">
+                        <h4 className=" mb-5 mt-5 ">
+                          Select Pack in Available item{" "}
+                        </h4>
                       </div>
-                      
-                      {
-                        packdata? <>
-                        <div className="card mb-3">
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between">
-                              
-                              <div className="d-flex flex-row align-items-center">
-                                <div>
-                                  <img
-                                    src={packdata.Img1}
-                                    className="img-fluid rounded-3"
-                                    alt="Shopping item"
-                                    style={{ width: 65 }}
-                                  />
+                      <div className="row">
+                        {packdata.map((val) => {
+                          return (
+                            <div className="col-lg-4 col-sm-6 col-md-6 col-12 mb-3 mt-4 shadow">
+                              <div className="single-service">
+                                <div className="img PlanImg ">
+                                  <div className="img-cover">
+                                    <img src={val.Product_Img} alt="" />
+                                  </div>
                                 </div>
-                                <div className="ms-3">
-                                  <h5>{packdata.Row1}</h5>
-                                  <p className="small mb-0"></p>
+                                <div className="content">
+                                  <h2 className="title titlefix">
+                                    {val.Product_title}
+                                  </h2>
+                                  <p className="text textfix">
+                                    {val.Description}
+                                  </p>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                        <div className="card mb-3">
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between">
-                              <div className="d-flex flex-row align-items-center">
-                                <div>
-                                  <img
-                                    src={packdata.Img2}
-                                    className="img-fluid rounded-3"
-                                    alt="Shopping item"
-                                    style={{ width: 65 }}
-                                  />
-                                </div>
-                                <div className="ms-3">
-                                  <h5>{packdata.Row2}</h5>
-                                  <p className="small mb-0"></p>
-                                </div>
-                              </div>
-                              <div className="d-flex flex-row align-items-center quantityb "></div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="card mb-3">
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between">
-                              <div className="d-flex flex-row align-items-center">
-                                <div>
-                                  <img
-                                    src={packdata.Img3}
-                                    className="img-fluid rounded-3"
-                                    alt="Shopping item"
-                                    style={{ width: 65 }}
-                                  />
-                                </div>
-                                <div className="ms-3">
-                                  <h5>{packdata.Row3}</h5>
-                                  <p className="small mb-0"></p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="card mb-3">
-                          <div className="card-body">
-                            <div className="d-flex justify-content-between">
-                              <div className="d-flex flex-row align-items-center">
-                                <div>
-                                  <img
-                                    src={packdata.Img4}
-                                    className="img-fluid rounded-3"
-                                    alt="Shopping item"
-                                    style={{ width: 65 }}
-                                  />
-                                </div>
-                                <div className="ms-3">
-                                  <h5>{packdata.Row4}</h5>
-                                  <p className="small mb-0"></p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        </>:null
-                      }
-                     
+                          );
+                        })}
+                      </div>
                     </div>
 
                     <div className="col-lg-5 mt-5">
-                      {/* <div className="card bg-primary text-white rounded-3"> */}
                       <div
-                        className="card  text-white rounded-3"
+                        className="card text-white rounded-3"
                         style={{ backgroundColor: "#4D869C" }}
                       >
                         <div className="card-body">
@@ -322,12 +316,12 @@ const Plan = () => {
                           <hr className="my-4" />
                           <div className="d-flex justify-content-between">
                             <p className="mb-2">Subtotal</p>
-                            <p className="mb-2">Rs:{Price}</p>
+                            <p className="mb-2">Rs:{planPrice * Quantity}</p>
                           </div>
 
                           <div className="d-flex justify-content-between">
                             <p className="mb-2">Shipping</p>
-                            <p className="mb-2">Rs:100.00</p>
+                            <p className="mb-2">Free</p>
                           </div>
                           {/* <div className="d-flex justify-content-between">
                         <p className="mb-2">Discount</p>
