@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Formik, useFormik } from "formik";
+import {  useFormik } from "formik";
 import { Edit } from "../Schema/Edit";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { updatelog } from "../redux/CartSlice";
-import { Dialog } from "primereact/dialog";
-import { InputText } from "primereact/inputtext";
-import Profile from "../Profile";
-const Editpop = (props) => {
+
+const Editpop = ({isOpen, onClose }) => {
   const [LoginId, setLoginId] = useState([]);
 
   const dispetch = useDispatch();
@@ -16,7 +14,7 @@ const Editpop = (props) => {
     LoginUser.map((val) => {
       setLoginId(val.Id);
     });
-  }, []);
+  }, [LoginUser]);
 
   const initial = {
     Name: "",
@@ -37,13 +35,13 @@ const Editpop = (props) => {
       axios
         .post(
           "http://localhost/RegisterEdit.php",
-          { ...values, Id: LoginId, Profile: URL.createObjectURL(imgFile) },
+          { ...values, Id: LoginId },
           {
             headers: { "Content-Type": "multipart/form-data" },
           }
         )
         .then((res) => {
-          props.pass(props.pass);
+          // props.pass(props.pass);
         });
     },
   });
@@ -65,19 +63,11 @@ const Editpop = (props) => {
     }
   }, [LoginUser]);
 
-  const [imgFile, setImgFile] = useState(null);
-  const handleChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      setImgFile(file);
-    } else {
-      setImgFile(null);
-    }
-  };
+  
   return (
-    <section className="modal-wrapper">
-      <div className="model-container1">
-        <button className="close" onClick={props.pass}>
+    <section className={`modal-wrapper ${isOpen?" ":" hidden"}`}>
+      <div className={`model-container1`}>
+        <button className="close" onClick={onClose}>
           {" "}
           X
         </button>
@@ -87,7 +77,7 @@ const Editpop = (props) => {
         <div>
           <form onSubmit={formik.handleSubmit}>
             <div className="subcontainer1">
-              <div className="subin">
+              {/* <div className="subin">
                 <label style={{ margin: "3% 7% 0 0%" }}>Profile:</label>
                 <div>
                  
@@ -97,7 +87,7 @@ const Editpop = (props) => {
                 {formik.errors.Name && formik.touched.Name ? (
                   <p className="form-error">{formik.errors.Name}</p>
                 ) : null}
-              </div>
+              </div> */}
               <div className="subin">
                 <label style={{ margin: "3% 9% 0 5%" }}>Bio:</label>
                 <input

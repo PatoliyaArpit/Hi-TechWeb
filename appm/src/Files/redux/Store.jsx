@@ -5,6 +5,7 @@ import loremSlice from "./Product";
 import PlanSlice from "./Plan/Plan"
 import OrderSlice from"./Order/Order"
 import CartdataSlice from "./Cart/Cart"
+import HomeDataSlice from "./Home/Product"
 
 
 
@@ -25,6 +26,7 @@ const store=configureStore({
         plan:PlanSlice,
         Order:OrderSlice,
         Cartdata:CartdataSlice,
+        HomeData:HomeDataSlice,
     }
 })
 export default store

@@ -240,7 +240,7 @@ code {
   max-width: 20rem;
   max-height:50rem ;
   padding: 20px;
-  border: 1px solid black;
+  
   width:10px;
   height: 10px;
   display: flex;
@@ -248,6 +248,7 @@ code {
   justify-content: center;
   z-index: 111;
   border-radius: 50%;
+  color: #F5004F;
   
 }
 @media only screen and (min-width: 200px) and (max-width: 425px) {
@@ -317,9 +318,7 @@ code {
 }
 
 
-.clicktoup:hover{
-  background: white;
-}
+
 
 .subcontainer input{
   width: 90%;
@@ -358,13 +357,13 @@ code {
   transform: calc(1);
   transition: all 0.4s;
 }
-.close{
-  position: relative;
-  margin: 0 0 0 85%;
-  border: none;
-  background-color:none;
+  .close{
+    position: relative;
+    margin: 0 0 0 85%;
+    border: none;
+    background-color:none;
 
-}
+  }
 .close :hover{
   background-color:  none;
 }
@@ -388,11 +387,12 @@ p{
   top: 0;
   background-color: rgba(189, 189, 189, 0.6);
   z-index: 111;
+ 
 }
 
 
 .custom-modal {
-  z-index: 1050; /* Ensure modal is above the backdrop */
+  z-index: 1050; 
 }
 
 .modal-backdrop-custom {
@@ -536,26 +536,46 @@ p{
   background-color: #e9e1e1;
 }
 .Logoutbtn{
-  background-color:rgb(216, 210, 210);
+  background-color:#F5004F;
   border: none;
-  width: 15%;
+  width: 100px;
   height: auto;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   border-radius: 2px;
+  color: white;
+  font-weight: 400;
+  border: 1px solid black;
+  border-radius: 8px;
 }
 .Logoutbtn:hover{
-  background-color:rgb(174, 170, 170);
+  background-color:#e24b45;
 }
 .Editbtn{
   border: none;
-  width: 15%;
+  width: 100px;
   height: auto;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   border-radius: 2px;
-  background-color: rgb(209, 219, 228);
+  background-color:#F5004F;
+  color: white;
+  font-weight: 400;
+  border: 1px solid black;
+  border-radius: 8px;
 }
 .Editbtn:hover{
-  background-color: rgb(188, 197, 204);
+  background-color:#e24b45;
+}
+.blankCart{
+  background-color: #F5004F;
+  border-radius: 12px;
+  height: 40px;
+  width: 120px;
+  margin: 2% 0 5% 0;
+  border: #000000;
+  color: #000000;
+  font-weight: 400;
+  font-size: 14px;
+  border: 1px solid black;
 }
 .model-container1{
   top: 35%;
@@ -570,6 +590,7 @@ p{
   width: 100vh;
   align-items: center;
   justify-content: center;
+ 
 }
 .subcontainer1 input{
   width: 70%;
@@ -581,6 +602,7 @@ p{
   margin: 3% 0 3% 0 ;
   border: 1px solid black;
   border-radius: 2px;
+ 
 
 
 }
@@ -599,6 +621,13 @@ p{
 .subin{
 
   display: flex;
+}
+.model-container1.show {
+  transform: scale(1);
+}
+.modal-wrapper.show {
+  opacity: 1;
+  visibility: visible;
 }
 @media screen and (max-width:800px) {
   .subcontainer1 {
@@ -847,8 +876,8 @@ p{
   .card-stepper {
   z-index: 0
   }
-  .View:link,
-  .btn:visited {
+  .View
+   {
    text-transform: uppercase;
    text-decoration: none;
    color: rgb(27, 27, 27);
@@ -859,35 +888,13 @@ p{
    transition: all .2s;
    position: relative;
    margin: 0 0 2% 0;
+   border: 1px solid;
   }
   
-  /* .View:hover {
-   transform: translateY(-5px);
-   box-shadow: 0 10px 20px rgba(27, 27, 27, .5);
-  } */
+ 
+
   
-  .View:active {
-   transform: translateY(-3px);
-  }
   
-  .View::after {
-   content: "";
-   display: inline-block;
-   height: 100%;
-   width: 100%;
-   border-radius: 100px;
-   top: 0;
-   left: 0;
-   position: absolute;
-   z-index: -1;
-   transition: all .3s;
-  }
-  
-  .View:hover::after {
-   background-color: rgb(0, 238, 255);
-   transform: scaleX(1.4) scaleY(1.5);
-   opacity: 0;
-  }
   /* Bill */
 
   body{
@@ -1065,11 +1072,12 @@ modal-wrapper
   left: 0;
   top: 0;
   transition: left 0.3s ease-in-out;
- 
+
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 .sidebar-container.open {
   left: 0;
+  
 }
 .model-container-sidebar{
   top: 0%;
@@ -1089,6 +1097,7 @@ modal-wrapper
   margin-top: 0px;
   flex-grow: 1;
   padding: 0 0px;
+  margin-top: 51px;
 }
 .menu-item-sidebar {
   text-decoration: none;
@@ -1159,4 +1168,16 @@ modal-wrapper
 .submenu-item-sidebar:hover {
   background-color: #D4D4D4;
   border-radius: 5px;
+}
+
+.fontcolor{
+  color: black;
+  font-size: 2rem;
+}
+.Loginname{
+  color: white;
+}
+.button{
+  background: #F5004F;
+  color: black;
 }

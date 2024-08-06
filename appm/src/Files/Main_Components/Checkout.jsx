@@ -7,8 +7,7 @@ import Footer from "../Components/Footer";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
-import { getcart } from "../redux/Cart/Cart";
+import { Decrease, Deletecart, getcart, Increase } from "../redux/Cart/Cart";
 
 function Checkout() {
   const dispatch = useDispatch();
@@ -17,40 +16,23 @@ function Checkout() {
   // Redux state
   const UserLogin = useSelector((state) => state.log.log);
   const cartItems = useSelector((state) => state.cart.cart);
-  const rendom = useSelector((state) => state.Rendomurl.Rendomurl);
-  // console.log(rendom, "rendom");
-  // Local state
+
+  
   const [Price, setPrice] = useState(0);
   const [FinalP, setFinalP] = useState(0);
-  const [cartdata, setcartdata] = useState([]);
+ 
   const [LoginId, setLoginId] = useState(null);
   const [Final, setFinal] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
-  const Cartdata = useSelector((state) => state.Cartdata);
-  useEffect(() => {
-    setcartdata(Cartdata.data);
-  }, [Cartdata]);
-  console.log(Final, "cartdadadadad");
+  const {Cart} = useSelector((state) => state.Cartdata);
+ 
+  
 
   useEffect(() => {
     dispatch(getcart());
   }, [dispatch]);
-
-  // const fetchCartData = () => {
-  //   fetch("http://localhost/cartshow.php")
-  //     .then((res) => {
-  //       return res.json();
-  //     })
-  //     .then((result) => {
-  //       // setcartdata(result);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   fetchCartData();
-  // }, []);
-
+  
   useEffect(() => {
     if (UserLogin.length > 0) {
       setLoginId(UserLogin[0].Id);
@@ -61,26 +43,26 @@ function Checkout() {
 
   useEffect(() => {
     if (LoginId !== null) {
-      const finalCart = cartdata.filter((item) => item.UserId === LoginId);
+      const finalCart = Cart?.filter((item) => item.UserId === LoginId);
       setFinal(finalCart);
     } else {
       setFinal(cartItems);
     }
-    // fetchCartData();
-  }, [LoginId, cartdata, cartItems]);
+   
+  }, [LoginId, Cart, cartItems]);
 
   useEffect(() => {
-    const totalPrice = Final.reduce(
+    const totalPrice = Final?.reduce(
       (total, item) => total + item.Price * item.quantity,
       0
     );
     setPrice(totalPrice);
     setFinalP(totalPrice + 0);
-    // fetchCartData();
+ 
   }, [Final]);
 
   const increase = (itemId) => {
-    const updatedCartItems = cartItems.map((item) =>
+    const updatedCartItems = cartItems?.map((item) =>
       item.Id === itemId ? { ...item, quantity: item.quantity + 1 } : item
     );
     dispatch(update(updatedCartItems));
@@ -120,61 +102,31 @@ function Checkout() {
     navigate("/");
   };
 
-  const handleincrease = (data) => {
-    axios
-      .post("http://localhost/Increcart.php", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        // fetchCartData();
-        dispatch(getcart())
-      })
-      .catch((error) => {
-        console.error("There was an error increasing the quantity!", error);
-      });
+  const handleincrease =async (data) => {
+   await dispatch(Increase(data))
+    dispatch(getcart())
+  
+    
   };
 
-  const handledecrease = (data) => {
-    axios
-      .post("http://localhost/Decrecart.php", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        // fetchCartData();
-        dispatch(getcart())
-      });
+  const handledecrease =async (data) => {
+   await dispatch(Decrease(data));
+    dispatch(getcart());
+   
+   
   };
 
-  const handleDelete = (data) => {
-    axios
-      .post("http://localhost/deletecart.php", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        // fetchCartData();
-        // fetchCartData();
-        dispatch(getcart())
-        setcartdata((prevData) =>
-          prevData.filter((item) => item.Id !== data.Id)
-        );
-        setRefresh(!refresh);
-      })
-      .catch((error) => {
-        console.error("There was an error deleting the item!", error);
-      });
+  const handleDelete =async (data) => {
+    await dispatch(Deletecart(data))
+    dispatch(getcart())
+    
   };
 
   return (
     <>
       <Header refresh={refresh}></Header>
       <ToastContainer />
-      {Final.length === 0 ? (
+      {Final?.length === 0 ? (
         <section style={{ margin: "25px 0 0 0 " }}>
           <div style={{ height: "auto" }}>
             <h1> Shoping Cart </h1>
@@ -190,17 +142,9 @@ function Checkout() {
             <p>you will find lot of interesting products on our "Shop" page</p>
           </div>
           <div>
-            <button
+            <button className="blankCart"
               style={{
-                backgroundColor: "#3fb698",
-                borderRadius: "12px",
-                height: "40px",
-                width: "120px",
-                margin: "2% 0 5% 0 ",
-                border: "none",
-                color: "white",
-                fontWeight: "400",
-                fontSize: "13px",
+               
               }}
               onClick={() => returnHome()}
             >
@@ -231,13 +175,13 @@ function Checkout() {
                           <div>
                             <p className="mb-1">Shopping cart</p>
                             <p className="mb-0">
-                              You have {Final.length} items in your cart
+                              You have {Final?.length} items in your cart
                             </p>
                           </div>
                           <div></div>
                         </div>
 
-                        {Final.map((item) => {
+                        {Final?.map((item) => {
                           return (
                             <div className="card mb-3" key={item.Id}>
                               <div className="card-body">
@@ -324,11 +268,11 @@ function Checkout() {
                         {/* <div className="card bg-primary text-white rounded-3"> */}
                         <div
                           className="card  text-white rounded-3"
-                          style={{ backgroundColor: "#4D869C" }}
+                          // style={{ backgroundColor: "#4D869C" }}
                         >
                           <div className="card-body">
                             <div className="d-flex justify-content-between align-items-center mb-4">
-                              <h5 className="mb-0">Card details</h5>
+                              <h5 className="mb-0 fontcolor">Card details</h5>
                               <img
                                 src="img/home1/hitech2.jpg"
                                 className="img-fluid rounded-3"
@@ -336,19 +280,19 @@ function Checkout() {
                                 alt="Avatar"
                               />
                             </div>
-                            <p className=" lang-time mb-2 justify-content-center">
+                            <p className=" lang-time mb-2 justify-content-center fontcolor">
                               Card type
                             </p>
-                            <a href="#!" type="submit" className="text-white">
+                            <a href="#!" type="submit" className="text-black ">
                               <i className="fab fa-cc-mastercard fa-2x me-2" />
                             </a>
-                            <a href="#!" type="submit" className="text-white">
+                            <a href="#!" type="submit" className="text-black">
                               <i className="fab fa-cc-visa fa-2x me-2" />
                             </a>
-                            <a href="#!" type="submit" className="text-white">
+                            <a href="#!" type="submit" className="text-black">
                               <i className="fab fa-cc-stripe fa-2x me-2" />
                             </a>
-                            <a href="#!" type="submit" className="text-white">
+                            <a href="#!" type="submit" className="text-black">
                               <i className="fab fa-cc-paypal fa-2x" />
                             </a>
 
@@ -369,13 +313,14 @@ function Checkout() {
 
                             <button
                               type="button"
-                              className="btn btn-info btn-block btn-lg"
+                              className="btn btn-info btn-block btn-lg button"
                               onClick={local}
+                              style={{backgroundColor:"#F5004F",color:"black"}}
                             >
                               <Link
                                 // to={`/${rendomurl}`}
                                 // to="/Order"
-                                className="d-flex justify-content-between text-decoration-none"
+                                className="d-flex justify-content-between text-decoration-none "
                                 // onClick={()=>movetoAddress()}
                               >
                                 <span> Total:{FinalP}</span>

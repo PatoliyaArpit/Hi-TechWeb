@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { loadStripe } from "@stripe/stripe-js";
 import Orderplaced from "../Popup/Orderplaced";
 import axios from "axios";
-
 
 const PaymentType = () => {
   const cartitem = useSelector((state) => state.cart.cart);
@@ -17,22 +16,24 @@ const PaymentType = () => {
   const [Paymentmethode, setPaymentmethode] = useState({});
   const [Succpop, setSuccpop] = useState(false);
   const [Address, setAddress] = useState("");
-  const [city, setCity] = useState('');
-  const [Pincode, setPincode] = useState('');
-  const [FName,setFName]=useState('')
-  const [LName,setLName]=useState('')
-  const [Contact,setContact]=useState('')
-  const [date,setdate]=useState("")
-  const [Time,setTime]=useState("")
-  const [Day,setDay]=useState("")
+  const [city, setCity] = useState("");
+  const [Pincode, setPincode] = useState("");
+  const [FName, setFName] = useState("");
+  const [LName, setLName] = useState("");
+  const [Contact, setContact] = useState("");
+  const [date, setdate] = useState("");
+  const [Time, setTime] = useState("");
+  const [Day, setDay] = useState("");
   const [cartplan, setcartplan] = useState("");
-  const [FinalData,setFinalData]=useState([])
+  const [FinalData, setFinalData] = useState([]);
   const SelectAddress = useSelector((state) => state.Address.Address);
   const plancart = useSelector((state) => state.Admincart.Admincart);
   const Plan = useSelector((state) => state.Admincart.Admincart);
 
-  console.log(FinalData,"planname")
-  
+  const handlePaymentChange = (paymentMethod) => {
+    setPaymentmethode(paymentMethod);
+  };
+
   useEffect(() => {
     plancart.map((val) => {
       setcartplan(val.Click);
@@ -43,7 +44,7 @@ const PaymentType = () => {
       setLoginId(val.Id);
     });
   }, []);
-  
+
   useEffect(() => {
     SelectAddress.map((val) => {
       setAddress(val.Addressd);
@@ -51,8 +52,7 @@ const PaymentType = () => {
       setPincode(val.Pincode);
       setFName(val.FName);
       setLName(val.LName);
-      setContact(val.Contact)
-      
+      setContact(val.Contact);
     });
   });
   useEffect(() => {
@@ -73,7 +73,7 @@ const PaymentType = () => {
       setFinalData(Plan);
     }
   }, [cartplan, Final, Plan]);
-// console.log(FinalData,"plan")
+
   const call1 = () => {
     fetch("http://localhost/cartshow.php")
       .then((res) => {
@@ -114,12 +114,8 @@ const PaymentType = () => {
       console.log(result.error);
     }
   };
-  const Payment = (val) => {
-    setPaymentmethode(val);
-  };
-  const makePaymentCod = () => {
-    // navigator("/success");
 
+  const makePaymentCod = () => {
     setSuccpop(true);
     Order();
     removecart();
@@ -127,9 +123,8 @@ const PaymentType = () => {
   const mackalert = () => {
     alert("Please Select Payment Methode");
   };
-console.log(Contact,"contavt")
+
   const Order = () => {
-   
     FinalData.map((item) => {
       axios
         .post(
@@ -137,20 +132,20 @@ console.log(Contact,"contavt")
           {
             Product: item.Title,
             UserId: LoginId,
-            ProductImg:item.Img,
-            Quantity:item.quantity,
-            ProductPrice:item.Price,
-            Address:Address,
-            City:city,
-            Pincode:Pincode,
-            FName:FName,
-            LName:LName,
-            Date:date,
-            Time:Time,
-            Day:Day,
-            PaymentMethode:Paymentmethode,
-            Order_Status:"In progress",
-            Contact:Contact
+            ProductImg: item.Img,
+            Quantity: item.quantity,
+            ProductPrice: item.Price,
+            Address: Address,
+            City: city,
+            Pincode: Pincode,
+            FName: FName,
+            LName: LName,
+            Date: date,
+            Time: Time,
+            Day: Day,
+            PaymentMethode: Paymentmethode,
+            Order_Status: "In progress",
+            Contact: Contact,
           },
           {
             headers: {
@@ -165,10 +160,8 @@ console.log(Contact,"contavt")
           console.error("Error submitting item:", error);
         });
     });
-
-   
   };
-  const removecart=()=>{
+  const removecart = () => {
     if (cartplan === "Cart") {
       axios
         .request({
@@ -187,36 +180,55 @@ console.log(Contact,"contavt")
           console.error("There was an error making the request:", error);
         });
     }
-    }
+  };
 
-  
-  useEffect(()=>{
+  useEffect(() => {
     const date = new Date();
 
     const year = date.getFullYear();
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     const month = monthNames[date.getMonth()]; // Months are zero-based, so we add 1
-    const day = String(date.getDate()).padStart(2, '0');
-    
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    
-    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const day = String(date.getDate()).padStart(2, "0");
+
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
     const dayOfWeek = daysOfWeek[date.getDay()];
-    
+
     const formattedDate = `${day}-${month}-${year}`;
     const formattedTime = `${hours}:${minutes}:${seconds}`;
     const formattedDay = dayOfWeek;
-    setdate(formattedDate)
-    setTime(formattedTime)
-    setDay(formattedDay)
+    setdate(formattedDate);
+    setTime(formattedTime);
+    setDay(formattedDay);
     console.log(`Date: ${formattedDate}`);
     console.log(`Time: ${formattedTime}`);
     console.log(`Day: ${formattedDay}`);
-    
-  },[])
-  
+  }, []);
+
   return (
     <>
       <Header />
@@ -324,42 +336,54 @@ console.log(Contact,"contavt")
 
                     <form className="pb-3">
                       <div className="d-flex flex-row pb-3">
-                        <div className="d-flex align-items-center pe-2">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="Payment"
-                            defaultValue=""
-                            aria-label="..."
-                            defaultChecked=""
-                            onChange={() => Payment("Cod")}
-                          />
-                        </div>
-                        <div className="rounded border d-flex w-100 p-3 align-items-center">
-                          <p className="mb-0">
-                            <i className="fab fa-cc-cod fa-lg text-primary pe-2" />
-                            Cash On Delevery
-                          </p>
-                        </div>
+                        <label
+                          className="d-flex align-items-center w-100"
+                          onClick={() => handlePaymentChange("Cod")}
+                        >
+                          <div className="d-flex align-items-center pe-2">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="Payment"
+                              value="Cod"
+                              checked={Paymentmethode === "Cod"}
+                              onChange={() => handlePaymentChange("Cod")}
+                              style={{ pointerEvents: "none" }} // Prevents clicking directly on the radio button
+                            />
+                          </div>
+                          <div className="rounded border d-flex w-100 p-3 align-items-center">
+                            <p className="mb-0">
+                              <i className="fab fa-cc-cod fa-lg text-primary pe-2" />
+                              Cash On Delivery
+                            </p>
+                          </div>
+                        </label>
                       </div>
+
                       <div className="d-flex flex-row">
-                        <div className="d-flex align-items-center pe-2">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="Payment"
-                            defaultValue=""
-                            aria-label="..."
-                            onChange={() => Payment("Card")}
-                          />
-                        </div>
-                        <div className="rounded border d-flex w-100 p-3 align-items-center">
-                          <p className="mb-0">
-                            <i className="fab fa-cc-visa fa-lg text-bodu pe-2" />
-                            Visa Debit Card
-                          </p>
-                          <div className="ms-auto">************1038</div>
-                        </div>
+                        <label
+                          className="d-flex align-items-center w-100"
+                          onClick={() => handlePaymentChange("Card")}
+                        >
+                          <div className="d-flex align-items-center pe-2">
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name="Payment"
+                              value="Card"
+                              checked={Paymentmethode === "Card"}
+                              onChange={() => handlePaymentChange("Card")}
+                              style={{ pointerEvents: "none" }} // Prevents clicking directly on the radio button
+                            />
+                          </div>
+                          <div className="rounded border d-flex w-100 p-3 align-items-center">
+                            <p className="mb-0">
+                              <i className="fab fa-cc-visa fa-lg text-body pe-2" />
+                              Visa Debit Card
+                            </p>
+                            <div className="ms-auto">************1038</div>
+                          </div>
+                        </label>
                       </div>
                     </form>
 

@@ -14,6 +14,7 @@ import Footer from "../Components/Footer";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const profile = useSelector((state) => state.log.log);
 
   const [cartdata, setcartdata] = useState([]);
@@ -22,8 +23,6 @@ const Profile = () => {
   const [ProfilePic, setProfilepic] = useState();
   const [Profiledata, setprofiledata] = useState([]);
   const [FilterUser, setFilteruser] = useState({});
-  
-
   const [order, setorder] = useState([]);
   const [FinalOrder, setFinalOrder] = useState([]);
   const [toggleorder, setttoggleorder] = useState(false);
@@ -32,7 +31,6 @@ const Profile = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
 
-  const dispatch = useDispatch();
   const notify = () => {
     toast.error("Account has been logout", {
       position: "top-center", // directly use string value for position
@@ -108,8 +106,6 @@ const Profile = () => {
       setProfilepic(FilterUser.Profile);
     }
   }, [FilterUser]);
-
-
 
   const call5 = () => {
     fetch("http://localhost/Ordershow.php")

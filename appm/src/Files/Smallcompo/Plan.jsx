@@ -12,26 +12,24 @@ import Poppop from "../Popup/Poppop";
 import PoppopR from "../Popup/PoppopR";
 import { Adcart } from "../redux/CartSlice";
 import { useLocation } from "react-router-dom";
+import { getpackdetail, getplan } from "../redux/Plan/Plan";
 
 const Plan = () => {
   const { state } = useLocation();
-  console.log(state,"state000000000000")
   const [Fprice, setFprice] = useState(0);
-  const [Data, setData] = useState([]);
   const [packdata, setpackdata] = useState([]);
 
   const navigate = useNavigate();
   const dispetch = useDispatch();
-  const show = useSelector((state) => state.plan.plan);
-  const UserLogin = useSelector((state) => state.log.log);
 
   const final = useSelector((state) => state.log.log);
+  const { pack, packdetails } = useSelector((state) => state.plan);
 
   const [pop, setpop] = useState(false);
   const [popR, setpopR] = useState(false);
   const [popEmail, setpopEmail] = useState(false);
   const [popNewp, setpopNewp] = useState(false);
-  const [plandata, setplandata] = useState([]);
+  // const [plandata, setplandata] = useState([]);
   const [Quantity, setQuantity] = useState(1);
   const [filterplan, setfilterplan] = useState([]);
   const [planPrice, setplanPrice] = useState("");
@@ -41,7 +39,11 @@ const Plan = () => {
     const Finalp = Price1 + 0;
     setFprice(Finalp);
   });
-  
+
+  useEffect(() => {
+    dispetch(getpackdetail());
+    dispetch(getplan());
+  }, [dispetch, packdetails]);
 
   const recoll = () => {
     setpop(true);
@@ -94,48 +96,33 @@ const Plan = () => {
     navigate("/Order");
   };
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch("http://localhost/Pack_detail.php");
-      const result = await response.json();
-      setData(result);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (state?.Title && Data.length) {
-      const Pack = Data.filter((val) => val.Main_title === state.Title);
+    if (state?.Title && packdetails?.length) {
+      const Pack = packdetails.filter((val) => val.Main_title === state.Title);
 
       setpackdata(Pack);
     }
-  }, [state, Data]);
-  const call3 = () => {
-    fetch("http://localhost/pack.php")
-      .then((result) => {
-        return result.json();
-      })
-      .then((res) => {
-        setplandata(res);
-      });
-  };
+  }, [state, packdetails]);
+  // const call3 = () => {
+  //   fetch("http://localhost/pack.php")
+  //     .then((result) => {
+  //       return result.json();
+  //     })
+  //     .then((res) => {
+  //       setplandata(res);
+  //     });
+  // };
 
+  // useEffect(() => {
+  //   call3();
+  // }, []);
   useEffect(() => {
-    call3();
-  }, []);
-  useEffect(() => {
-    const filterplan = plandata.filter((val) => val.Title === state.Title);
-    filterplan.map((val) => {
+    const filterplan = pack?.filter((val) => val.Title === state.Title);
+    filterplan?.map((val) => {
       setplanPrice(val.Price);
     });
     setfilterplan(filterplan);
-  }, [plandata]);
- 
+  }, [pack]);
 
   const handleincrease = () => {
     setQuantity(Quantity + 1);
@@ -143,10 +130,9 @@ const Plan = () => {
   const handledecrease = () => {
     if (Quantity > 1) {
       setQuantity(Quantity - 1);
-  }
+    }
   };
 
- 
   return (
     <>
       <Header></Header>
@@ -190,9 +176,9 @@ const Plan = () => {
                           </p>
                         </div>
                       </div> */}
-                      {filterplan.map((val) => {
-                        return (
-                          <div className="card mb-3 shadow">
+                      {filterplan && filterplan.length > 0 ? (
+                        filterplan.map((val) => (
+                          <div key={val.Title} className="card mb-3 shadow">
                             <div className="card-body">
                               <div className="d-flex justify-content-between">
                                 <div className="d-flex flex-row align-items-center">
@@ -209,16 +195,10 @@ const Plan = () => {
                                     <p className="small mb-0"></p>
                                   </div>
                                 </div>
-                                <div className="d-flex flex-row align-items-center quantityb ">
+                                <div className="d-flex flex-row align-items-center quantityb">
                                   <button
                                     className="incredecre"
-                                    onClick={() => {
-                                      if (UserLogin.length > 0) {
-                                        handledecrease();
-                                      } else {
-                                        // decrease(item.Id);
-                                      }
-                                    }}
+                                    onClick={() => handledecrease(val.Title)}
                                   >
                                     -
                                   </button>
@@ -230,13 +210,7 @@ const Plan = () => {
                                   </div>
                                   <button
                                     className="incredecre"
-                                    onClick={() => {
-                                      if (UserLogin.length > 0) {
-                                        handleincrease();
-                                      } else {
-                                        // increase(val.Id);
-                                      }
-                                    }}
+                                    onClick={() => handleincrease(val.Title)}
                                   >
                                     +
                                   </button>
@@ -249,8 +223,10 @@ const Plan = () => {
                               </div>
                             </div>
                           </div>
-                        );
-                      })}
+                        ))
+                      ) : (
+                        <p>No plans available</p>
+                      )}
 
                       <div className="container shadow p-6 Planheading mb-4">
                         <h4 className=" mb-5 mt-5 ">
@@ -258,7 +234,7 @@ const Plan = () => {
                         </h4>
                       </div>
                       <div className="row">
-                        {packdata.map((val) => {
+                        {packdata?.map((val) => {
                           return (
                             <div className="col-lg-4 col-sm-6 col-md-6 col-12 mb-3 mt-4 shadow">
                               <div className="single-service">
@@ -285,11 +261,11 @@ const Plan = () => {
                     <div className="col-lg-5 mt-5">
                       <div
                         className="card text-white rounded-3"
-                        style={{ backgroundColor: "#4D869C" }}
+                        style={{ backgroundColor: "" }}
                       >
                         <div className="card-body">
                           <div className="d-flex justify-content-between align-items-center mb-4">
-                            <h5 className="mb-0">Card details</h5>
+                            <h5 className="mb-0 fontcolor">Card details</h5>
                             <img
                               src="img/home1/hitech2.jpg"
                               className="img-fluid rounded-3"
@@ -297,19 +273,19 @@ const Plan = () => {
                               alt="Avatar"
                             />
                           </div>
-                          <p className=" lang-time mb-2 justify-content-center">
+                          <p className=" lang-time mb-2 justify-content-center fontcolor">
                             Card type
                           </p>
-                          <a href="#!" type="submit" className="text-white">
+                          <a href="#!" type="submit" className="text-black ">
                             <i className="fab fa-cc-mastercard fa-2x me-2" />
                           </a>
-                          <a href="#!" type="submit" className="text-white">
+                          <a href="#!" type="submit" className="text-black ">
                             <i className="fab fa-cc-visa fa-2x me-2" />
                           </a>
-                          <a href="#!" type="submit" className="text-white">
+                          <a href="#!" type="submit" className="text-black ">
                             <i className="fab fa-cc-stripe fa-2x me-2" />
                           </a>
-                          <a href="#!" type="submit" className="text-white">
+                          <a href="#!" type="submit" className="text-black ">
                             <i className="fab fa-cc-paypal fa-2x" />
                           </a>
 
@@ -337,6 +313,10 @@ const Plan = () => {
                             <button
                               type="button"
                               className="btn btn-info btn-block btn-lg"
+                              style={{
+                                backgroundColor: "#F5004F",
+                                color: "black",
+                              }}
                               onClick={() => {
                                 recoll();
                               }}
@@ -356,6 +336,10 @@ const Plan = () => {
                             <button
                               type="button"
                               className="btn btn-info btn-block btn-lg"
+                              style={{
+                                backgroundColor: "#F5004F",
+                                color: "black",
+                              }}
                               onClick={() => {
                                 MoveAddress();
                               }}

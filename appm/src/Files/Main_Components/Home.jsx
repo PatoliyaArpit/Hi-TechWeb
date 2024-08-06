@@ -21,41 +21,36 @@ import "react-toastify/dist/ReactToastify.css";
 import { getLorem } from "../redux/Product";
 import CurrentUser from "../Condition/CurrentUser";
 import { getcart } from "../redux/Cart/Cart";
+import { getAccessories, getEnergizer, getSlider } from "../redux/Home/Product";
 
 function Home() {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(clearplan());
     window.localStorage.removeItem("plan");
   }, []);
 
-  const [model, setmodel] = useState(false);
-  const [data, setdata] = useState([]);
-  const [data2, setdata2] = useState([]);
-  const [data3, setdata3] = useState([]);
-  const [data4, setdata4] = useState([]);
   const [cartdata, setcartdata] = useState([]);
   const [LoginId, setLoginId] = useState([]);
   const [Final, setFinal] = useState([]);
-  const [Logindata, setLogindata] = useState([]);
+
   const [valueEnergizer, setvalueEnergizer] = useState(" ");
   const [valueaccessories, setvalueaccessories] = useState(" ");
-  
 
-
-
-  const dispatch = useDispatch();
   const cartitem = useSelector((state) => state.cart.cart);
   const LoginUser = useSelector((state) => state.log.log);
-//   const Cartdata=useSelector((state)=>state.Cartdata)
-//   useEffect(()=>{
-// setcartdata(Cartdata.data)
-//   },[Cartdata])
-//   console.log(Final,"cartdadadadad")
- 
-// useEffect(()=>{
-//   dispatch(getcart())
-// },[dispatch])
+  const { Energizer, Accessories, Slider } = useSelector(
+    (state) => state.HomeData
+  );
+  const { Cart } = useSelector((state) => state.Cartdata);
+
+  useEffect(() => {
+    dispatch(getEnergizer());
+    dispatch(getAccessories());
+    dispatch(getSlider());
+    dispatch(getcart());
+  }, [dispatch]);
   useEffect(() => {
     if (LoginUser.length === 0) {
       call5();
@@ -72,156 +67,59 @@ function Home() {
 
   useEffect(() => {
     if (LoginId !== null) {
-      const Finalcart = cartdata.filter((val) => val.UserId === LoginId);
+      const Finalcart = Cart?.filter((val) => val.UserId === LoginId);
       if (LoginUser.length === 0) {
         setFinal(cartitem);
       } else {
         setFinal(Finalcart);
       }
     }
-  }, [cartdata, LoginId]);
+  }, [Cart, LoginId]);
 
   let Energizerbuttontoggal = [];
   useEffect(() => {
     if (LoginUser.length === 0) {
-      Final.filter((val) => val.ProductType === "Energizer").map((item) => {
+      Final?.filter((val) => val.ProductType === "Energizer").map((item) => {
         Energizerbuttontoggal.push(item.Id);
       });
     } else {
-      Final.filter((val) => val.ProductType === "Energizer").map((item) => {
+      Final?.filter((val) => val.ProductType === "Energizer").map((item) => {
         Energizerbuttontoggal.push(item.ItemId);
       });
     }
     setvalueEnergizer(Energizerbuttontoggal);
-    console.log(Final,"value")
   }, [LoginUser, Final]);
   let accessoriesbuttontoggal = [];
   useEffect(() => {
     if (LoginUser.length === 0) {
-      Final.filter((val) => val.ProductType === "accessories").map((item) => {
+      Final?.filter((val) => val.ProductType === "accessories").map((item) => {
         accessoriesbuttontoggal.push(item.Id);
       });
     } else {
-      Final.filter((val) => val.ProductType === "accessories").map((item) => {
+      Final?.filter((val) => val.ProductType === "accessories").map((item) => {
         accessoriesbuttontoggal.push(item.ItemId);
       });
     }
     setvalueaccessories(accessoriesbuttontoggal);
   }, [LoginUser, Final]);
+
   const handleClick = (imgUrl) => {
-    // navigate("/PDetails",{
-    //   Detail:{
-    //     img:imgUrl.Img,
-    //     title:imgUrl.Title,
-    //     price:imgUrl.Price,
-    //     Capacity:imgUrl.Capacity,
-    //     Type:imgUrl.Type,
-    //     Color:imgUrl.Color,
-    //     Brand:imgUrl.Brand,
-    //     Material:imgUrl.Material,
-    //     Id:imgUrl.Id,
-    //     ProductType:imgUrl.ProductType,
-    //     LoginId:LoginId
-    //   }
-      
-    // })
-   
-    
-    navigate("/PDetails",{
-      state:{
-        Img:imgUrl.Img,
-        Title:imgUrl.Title,
-        Price:imgUrl.Price,
-        Capacity:imgUrl.Capacity,
-        Type:imgUrl.Type,
-        Color:imgUrl.Color,
-        Brand:imgUrl.Brand,
-        Material:imgUrl.Material,
-        Id:imgUrl.Id,
-        ProductType:imgUrl.ProductType,
-        LoginId:LoginId
-
-      }
-    })
-    // localStorage.setItem("Img", imgUrl.Img);
-    // localStorage.setItem("title", imgUrl.Title);
-    // localStorage.setItem("price", imgUrl.Price);
-    // localStorage.setItem("Capacity", imgUrl.Capacity);
-    // localStorage.setItem("Type", imgUrl.Type);
-    // localStorage.setItem("Color", imgUrl.Color);
-    // localStorage.setItem("Brand", imgUrl.Brand);
-    // localStorage.setItem("Material", imgUrl.Material);
-    // localStorage.setItem("Id", imgUrl.Id);
-    // localStorage.setItem("ProductType", imgUrl.ProductType);
-    // localStorage.setItem("LoginId", LoginId);
+    navigate("/PDetails", {
+      state: {
+        Img: imgUrl.Img,
+        Title: imgUrl.Title,
+        Price: imgUrl.Price,
+        Capacity: imgUrl.Capacity,
+        Type: imgUrl.Type,
+        Color: imgUrl.Color,
+        Brand: imgUrl.Brand,
+        Material: imgUrl.Material,
+        Id: imgUrl.Id,
+        ProductType: imgUrl.ProductType,
+        LoginId: LoginId,
+      },
+    });
   };
-  // useEffect(() => {
-  //   localStorage.removeItem("Img");
-  //   localStorage.removeItem("title");
-  //   localStorage.removeItem("price");
-  //   localStorage.removeItem("Capacity");
-  //   localStorage.removeItem("Type");
-  //   localStorage.removeItem("Color");
-  //   localStorage.removeItem("Brand");
-  //   localStorage.removeItem("Material");
-  //   localStorage.removeItem("Id");
-  //   localStorage.removeItem("ProductType");
-  //   localStorage.removeItem("LoginId");
-  //   dispatch(cleareAddress());
-  //   localStorage.removeItem("Finalp");
-  // }, []);
-  useEffect(() => {
-    call();
-  }, []);
-
-  const call = () => {
-    fetch("http://localhost/masterimg.php")
-      .then((result) => {
-        return result.json();
-      })
-      .then((res) => {
-        setdata(res);
-      });
-  };
-
-  const call2 = () => {
-    fetch("http://localhost/Accessories.php")
-      .then((result) => {
-        return result.json();
-      })
-      .then((res) => {
-        setdata2(res);
-      });
-  };
-  useEffect(() => {
-    call2();
-  }, []);
-
-  const call3 = () => {
-    fetch("http://localhost/pack.php")
-      .then((result) => {
-        return result.json();
-      })
-      .then((res) => {
-        setdata3(res);
-      });
-  };
-  useEffect(() => {
-    call3();
-  }, []);
-
-  const call4 = () => {
-    fetch("http://localhost/Slider.php")
-      .then((result) => {
-        return result.json();
-      })
-      .then((res) => {
-        setdata4(res);
-      });
-  };
-  useEffect(() => {
-    call4();
-  }, []);
 
   const initialValues = {
     Name: "",
@@ -250,19 +148,6 @@ function Home() {
     call5();
   }, []);
 
-  const call6 = () => {
-    fetch("http://localhost/Loginshow.php")
-      .then((res) => {
-        return res.json();
-      })
-      .then((result) => {
-        setLogindata(result);
-      });
-  };
-  useEffect(() => {
-    call6();
-  }, []);
-
   const {
     values,
     errors,
@@ -286,7 +171,7 @@ function Home() {
           resetForm();
         }, 1000);
       });
-      
+
       emailjs.sendForm(
         "service_ijeva2d",
         "template_64nwgfr",
@@ -295,14 +180,7 @@ function Home() {
       );
     },
   });
-  useEffect(() => {
-    setmodel(false);
-    setTimeout(() => {
-      setmodel(true);
-    }, 9000);
-  }, []);
 
- 
   const handlecartdata = (data) => {
     axios
       .request({
@@ -314,8 +192,7 @@ function Home() {
         },
       })
       .then((res) => {
-        call5();
-        dispatch(getcart())
+        dispatch(getcart());
       });
   };
   const handalAccessories = (data) => {
@@ -329,9 +206,8 @@ function Home() {
         },
       })
       .then((res) => {
-        call5();
+        dispatch(getcart());
       });
-    
   };
   useEffect(() => {
     localStorage.removeItem("Detailtype");
@@ -341,8 +217,6 @@ function Home() {
     <div>
       <>
         <Header></Header>
-
-        
 
         {/* header-end */}
         {/* slider-area-start */}
@@ -361,7 +235,7 @@ function Home() {
               autoplayTimeout={3000}
               height={10}
             >
-              {data4.map((val) => {
+              {Slider?.map((val) => {
                 return (
                   <div className="Owlitem">
                     <img src={val.Img} width="10" alt="Image 1" />
@@ -516,9 +390,9 @@ function Home() {
                   </div>
                 </div>
               </div>
-            
+
               <div className="row">
-                {data.map((val) => {
+                {Energizer?.map((val) => {
                   const { Id, Img, Price, Title, Discount, ProductType } = val;
                   let TotalDiscount = (Price * Discount) / 100;
                   let Convert = Number(Price);
@@ -638,7 +512,7 @@ function Home() {
                 </div>
               </div>
               <div className="row">
-                {data2.map((val) => {
+                {Accessories?.map((val) => {
                   const {
                     Id,
                     Img,
@@ -666,7 +540,7 @@ function Home() {
                               localStorage.setItem("Detailtype", "Accessories");
                             }}
                           >
-                            <img src={Img} alt="" />
+                            <img src={Img} alt="" className=" ml-12" />
                           </a>
                         </div>
                         <div className="content">
@@ -1039,7 +913,7 @@ function Home() {
                       href="https://www.google.com/maps/place/Hi-Tech+Solar+Products/@23.045196,72.664021,102m/data=!3m1!1e3!4m6!3m5!1s0x395e871bbbf7f7d5:0xd6ef026121e26a8e!8m2!3d23.0451962!4d72.6640206!16s%2Fg%2F11y3t79lt7?hl=en&entry=ttu"
                       target="_blank"
                     >
-                    {/* <iframe src="" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> */}
+                      {/* <iframe src="" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe> */}
                       Directions
                     </a>
                   </div>

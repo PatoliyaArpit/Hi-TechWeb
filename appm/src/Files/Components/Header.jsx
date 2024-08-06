@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Poppop from "../Popup/Poppop";
-
 import PoppopR from "../Popup/PoppopR";
 import ReactWhatsapp from "react-whatsapp";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import PoppopEmail from "../Popup/PoppopEmail";
 import PoppopNewPass from "../Popup/PoppopNewPass";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Sidebar from "../Popup/Sidebar";
+
+
 
 const Header = ( props ) => {
   const [toggleMenu, settoggleMenu] = useState(false);
@@ -146,9 +146,10 @@ const Header = ( props ) => {
         >
           <img src="img/home1/Whatsapp.png" className="Whats"></img>
         </ReactWhatsapp>
-        <button className="clicktoup" onClick={() => clickup()}>
-          <i class="fa-solid fa-arrow-up" style={{ fontSize: "1.5rem" }}></i>
-        </button>
+        <a className="clicktoup" onClick={() => clickup()}>
+          <i class="fa-solid fa-arrow-up" style={{ fontSize: "2.5rem" }}></i>
+        
+        </a>
 
         <div className="menu-area">
           <div className="container">
@@ -362,7 +363,7 @@ const Header = ( props ) => {
                                 style={{ margin: "0 0 0 -14px" }}
                               ></i>
 
-                              <p>{Loginname}</p>
+                              <p className="fs-4 Loginname">{Loginname}</p>
                             </div>
                           </Link>
                         )}

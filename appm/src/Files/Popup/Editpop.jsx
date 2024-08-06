@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {  useFormik } from "formik";
+import { useFormik } from "formik";
 import { Edit } from "../Schema/Edit";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { updatelog } from "../redux/CartSlice";
 
-const Editpop = ({isOpen, onClose }) => {
+const Editpop = ({ isOpen, onClose }) => {
   const [LoginId, setLoginId] = useState([]);
 
   const dispetch = useDispatch();
@@ -31,7 +31,7 @@ const Editpop = ({isOpen, onClose }) => {
     validationSchema: Edit,
     onSubmit: (values) => {
       dispetch(updatelog({ ...values, Id: LoginId }));
-    
+
       axios
         .post(
           "http://localhost/RegisterEdit.php",
@@ -41,7 +41,7 @@ const Editpop = ({isOpen, onClose }) => {
           }
         )
         .then((res) => {
-          // props.pass(props.pass);
+          onClose(onClose);
         });
     },
   });
@@ -63,10 +63,9 @@ const Editpop = ({isOpen, onClose }) => {
     }
   }, [LoginUser]);
 
-  
   return (
-    <section className={`modal-wrapper ${isOpen?" ":"hidden"}`}>
-      <div className="model-container1">
+    <section className={`modal-wrapper ${isOpen?"":" hidden"}`}>
+      <div className={`model-container1`}>
         <button className="close" onClick={onClose}>
           {" "}
           X
@@ -77,21 +76,11 @@ const Editpop = ({isOpen, onClose }) => {
         <div>
           <form onSubmit={formik.handleSubmit}>
             <div className="subcontainer1">
-              {/* <div className="subin">
-                <label style={{ margin: "3% 7% 0 0%" }}>Profile:</label>
-                <div>
-                 
-                    
-                  <input type="file" accept="image/*" onChange={handleChange} />
-                </div>
-                {formik.errors.Name && formik.touched.Name ? (
-                  <p className="form-error">{formik.errors.Name}</p>
-                ) : null}
-              </div> */}
+
               <div className="subin">
                 <label style={{ margin: "3% 9% 0 5%" }}>Bio:</label>
                 <input
-                  // className="logininput"
+
                   type="text"
                   placeholder="Enter Bio"
                   id="Bio"
@@ -100,9 +89,7 @@ const Editpop = ({isOpen, onClose }) => {
                   value={formik.values.Bio}
                   onBlur={formik.handleBlur}
                 ></input>
-                {/* {formik.errors.Name && formik.touched.Name ? (
-                  <p className="form-error">{formik.errors.Name}</p>
-                ) : null} */}
+
               </div>
 
               <div className="subin">
@@ -205,6 +192,8 @@ const Editpop = ({isOpen, onClose }) => {
         </div>
       </div>
     </section>
+
+
   );
 };
 

@@ -5,7 +5,7 @@ import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Poppop from "../Popup/Poppop";
 import PoppopR from "../Popup/PoppopR";
 import PoppopEmail from "../Popup/PoppopEmail";
@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Address } from "../Schema/Address";
 import { useFormik } from "formik";
 import { Addressselect } from "../redux/CartSlice";
+import { MdEdit } from "react-icons/md";
 
 function Order(props) {
   const navigate = useNavigate();
@@ -49,7 +50,7 @@ function Order(props) {
   const [cartplan, setcartplan] = useState("");
   const plancart = useSelector((state) => state.Admincart.Admincart);
   const Plandata = useSelector((state) => state.Admincart.Admincart);
-console.log(Plandata,"pln")
+ 
   useEffect(() => {
     plancart.map((val) => {
       setPrice(val.Finalp);
@@ -74,34 +75,7 @@ console.log(Plandata,"pln")
     }
   }, [cartdata, LoginId]);
 
-  const makePayment = async () => {
-    const stripe = await loadStripe(
-      "pk_test_51PFvkNSF0uRd81kXkvI0KPn46KKuVWmhdcqVisa6HQ5vccNvpo4TvtuRezoLzA7UtedphYGtxfzq15nx684mYOAw005Sply1iG"
-    );
-    const body = {
-      products: Final,
-    };
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    const response = await fetch(
-      "http://localhost:8080/api/create-checkout-session",
-      {
-        method: "POST",
-        headers: headers,
-        body: JSON.stringify(body),
-      }
-    );
-    const session = await response.json();
-
-    const result = stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    if (result.error) {
-      console.log(result.error);
-    }
-  };
+ 
 
   const Payment = () => {
     if (SelecetAddress.length === 0) {
@@ -111,11 +85,8 @@ console.log(Plandata,"pln")
     }
   };
 
- 
-
   const btn = () => {
     setpop(false);
-    
   };
   const btnr = () => {
     setpopR(true);
@@ -262,11 +233,7 @@ console.log(Plandata,"pln")
     settoggle(false);
   };
 
-  // useEffect(() => {
-  //   Edit.map((val) => {
-  //     setfinaledit(val.Id);
-  //   });
-  // }, [Edit]);
+  
 
   const initial = {
     FName: "",
@@ -297,7 +264,7 @@ console.log(Plandata,"pln")
     },
   });
 
-  // console.log(formik.values);
+  
   useEffect(() => {
     if (Edit) {
       formik.setValues({
@@ -327,8 +294,7 @@ console.log(Plandata,"pln")
     settoggle(!toggle);
     setEdit("");
   };
-  // dispetch(cleareAddress())
-  // console.log(SelecetAddress, "formik");
+  
   return (
     <>
       <Header></Header>
@@ -563,18 +529,18 @@ console.log(Plandata,"pln")
                                     </p>
                                   </div>
                                 </label>
-                                <button
-                                  className="bg-red-500 hover:bg-red-700 text-black font-bold py-2 px-4 rounded-full ml-auto w-[60px] h-[30px]"
+                                <Link
+                                  className=" text-black  py-2 px-4  ml-auto text-xl"
                                   onClick={(e) => passId(val.Id)}
                                 >
-                                  Edit
-                                </button>{" "}
+                                  <MdEdit />
+                                </Link>{" "}
                               </div>
                             </div>
                             {val.Id === Edit.Id ? (
                               // Edit Form
-                              <div>
-                                <section className="">
+                              <div >
+                                <section className="" >
                                   <div className="">
                                     <button
                                       className="close"
@@ -610,7 +576,7 @@ console.log(Plandata,"pln")
                                                 onChange={formik.handleChange}
                                                 value={formik.values.FName}
                                                 onBlur={formik.handleBlur}
-                                                style={{ width: "300px" }}
+                                                style={{ width:"auto" }}
                                               ></input>
                                               {formik.errors.FName &&
                                               formik.touched.FName ? (
@@ -638,7 +604,7 @@ console.log(Plandata,"pln")
                                                 onChange={formik.handleChange}
                                                 value={formik.values.LName}
                                                 onBlur={formik.handleBlur}
-                                                style={{ width: "300px" }}
+                                                style={{ width:"auto" }}
                                               ></input>
                                               {formik.errors.LName &&
                                               formik.touched.LName ? (
@@ -663,7 +629,7 @@ console.log(Plandata,"pln")
                                                 onChange={formik.handleChange}
                                                 value={formik.values.Contact}
                                                 onBlur={formik.handleBlur}
-                                                style={{ width: "300px" }}
+                                                style={{ width:"auto" }}
                                               ></input>
                                               {formik.errors.Contact &&
                                               formik.touched.Contact ? (
@@ -685,9 +651,10 @@ console.log(Plandata,"pln")
                                             <div>
                                               <select
                                                 style={{
-                                                  width: "300px",
+                                                  width: "180px",
                                                   height: "30px",
                                                   fontSize: "1.4rem",
+                                                  border:"1px solid "
                                                 }}
                                                 name="State"
                                                 id="State"
@@ -735,7 +702,7 @@ console.log(Plandata,"pln")
                                                 onChange={formik.handleChange}
                                                 value={formik.values.Addressd}
                                                 onBlur={formik.handleBlur}
-                                                style={{ width: "300px" }}
+                                                style={{ width:"auto" }}
                                               ></input>
                                               {formik.errors.Addressd &&
                                               formik.touched.Addressd ? (
@@ -761,7 +728,7 @@ console.log(Plandata,"pln")
                                                 onChange={formik.handleChange}
                                                 value={formik.values.City}
                                                 onBlur={formik.handleBlur}
-                                                style={{ width: "300px" }}
+                                                style={{ width:"auto" }}
                                               ></input>
                                               {formik.errors.City &&
                                               formik.touched.City ? (
@@ -786,7 +753,7 @@ console.log(Plandata,"pln")
                                                 onChange={formik.handleChange}
                                                 value={formik.values.Pincode}
                                                 onBlur={formik.handleBlur}
-                                                style={{ width: "300px" }}
+                                                style={{ width:"auto" }}
                                               ></input>
                                               {formik.errors.Pincode &&
                                               formik.touched.Pincode ? (
@@ -1069,7 +1036,7 @@ console.log(Plandata,"pln")
                   <div className="float-end">
                     <button
                       className="btn btn-light border"
-                      style={{ width: "90px", height: "35px" }}
+                      style={{ width: "90px", height: "35px" ,fontSize:"1.5rem" }}
                     >
                       Cancel
                     </button>
@@ -1079,7 +1046,8 @@ console.log(Plandata,"pln")
                         style={{
                           width: "90px",
                           height: "35px",
-                          backgroundColor: "#3fb698",
+                          backgroundColor: "#EA1B15",
+                          color: "black",
                         }}
                         onClick={() => {
                           setpop(true);
@@ -1093,7 +1061,9 @@ console.log(Plandata,"pln")
                         style={{
                           width: "90px",
                           height: "35px",
-                          backgroundColor: "#3fb698",
+                          backgroundColor: "#F5004F",
+                          color: "black",
+                          fontSize:"1.5rem"
                         }}
                         onClick={() => {
                           Payment();
@@ -1122,7 +1092,7 @@ console.log(Plandata,"pln")
                 style={{ maxWidth: "450px" }}
               >
                 <h4 className="mb-3">Summary</h4>
-            
+
                 <hr />
                 <div className="d-flex justify-content-between">
                   <p className="mb-2">Total price:</p>

@@ -33,6 +33,7 @@ const PoppopR = (props) => {
     Email: "",
     Contact: "",
     Password: "",
+   
   };
   const [check,setcheck]=useState("")
  

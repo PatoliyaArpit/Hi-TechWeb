@@ -1,40 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getplan } from "../redux/Plan/Plan";
+import { getpackdetail, getplan } from "../redux/Plan/Plan";
 import { plan } from "../redux/CartSlice";
 
 const Pack = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [data3, setdata3] = useState([]);
-  const redux = useSelector((state) => state.plan);
-  const reduxplan1 = redux.data;
-  const [reduxplan, setreduxplan] = useState([]);
-  console.log(reduxplan, "reduxplan");
-
+ 
+  const {pack,packdetails} = useSelector((state) => state.plan);
+  
+  
   useEffect(() => {
-    dispatch(getplan());
+    dispatch(getpackdetail());
+    dispatch(getplan())
   }, [dispatch]);
-  useEffect(() => {
-    if (reduxplan1) {
-      setreduxplan(reduxplan1);
-    }
-  }, [reduxplan1]);
-
-  const call3 = () => {
-    fetch("http://localhost/pack.php")
-      .then((result) => result.json())
-      .then((res) => {
-        setdata3(res);
-      });
-  };
-
-  useEffect(() => {
-    call3();
-  }, []);
-
+  
   const byplan = (item) => {
     navigate("/Plan", {
       state: {
@@ -71,38 +53,39 @@ const Pack = () => {
             gap: "20px",
           }}
         >
-          {data3.map((val, index) => (
-            <div key={index} className="single-pricing">
-              <div className="top">
-                {val.Title === "Popular" ? (
-                  <p className="popular">Popular Pack</p>
-                ) : null}
-                <h2 className="name">{val.Title}</h2>
-                <h5 className="type">Consulting Pack</h5>
-              </div>
-              <div className="price">
-                <h4 className="tag">
-                  <span>Rs</span>
-                  {val.Price}
-                </h4>
-              </div>
-              <div className="bottom">
-                <ul className="feature">
-                  {reduxplan.filter((filter)=>filter.Main_title===val.Title).map((item, idx) => (
-                    <li key={idx}>{item.Product_title	}</li>
+           {pack && pack.length > 0 ? (
+        pack.map((val, index) => (
+          <div key={index} className="single-pricing">
+            <div className="top">
+              {val.Title === "Popular" && <p className="popular">Popular Pack</p>}
+              <h2 className="name">{val.Title}</h2>
+              <h5 className="type">Consulting Pack</h5>
+            </div>
+            <div className="price">
+              <h4 className="tag">
+                <span>Rs</span>
+                {val.Price}
+              </h4>
+            </div>
+            <div className="bottom">
+              <ul className="feature">
+                {packdetails
+                  ?.filter((filter) => filter.Main_title === val.Title)
+                  ?.map((item, idx) => (
+                    <li key={idx}>{item.Product_title}</li>
                   ))}
-                </ul>
-                <div className="buy">
-                  <button
-                    className="button"
-                    onClick={() => byplan(val)}
-                  >
-                    Buy this Plan
-                  </button>
-                </div>
+              </ul>
+              <div className="buy">
+                <button className="button" onClick={() => byplan(val)}>
+                  Buy this Plan
+                </button>
               </div>
             </div>
-          ))}
+          </div>
+        ))
+      ) : (
+        <p>No plans available</p>
+      )}
         </div>
       </div>
     </div>
