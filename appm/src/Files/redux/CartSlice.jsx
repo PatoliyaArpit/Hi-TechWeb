@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { json } from "react-router-dom";
+
 
 const initialState = {
   cart: [],
@@ -39,7 +39,7 @@ export const cartSlice = createSlice({
         state.cart.push({ ...action.payload, quantity: 1 });
       }
       // Save cart to local storage
-      console.log(action);
+      
       localStorage.setItem("cart", JSON.stringify(state.cart));
     },
    
@@ -68,7 +68,7 @@ export const cartSlice = createSlice({
       localStorage.setItem("reg", JSON.stringify(state.reg));
     },
     updatepassword: (state, action) => {
-      console.log(action);
+    
       const { Email, newPassword } = action.payload;
       const userIndex = state.reg.findIndex((user) => user.Email === Email);
       if (userIndex !== -1) {
@@ -131,7 +131,7 @@ export const cartSlice = createSlice({
       state.plan.push({ ...action.payload });
       localStorage.setItem("plan", JSON.stringify(state.plan));
 
-      console.log(action);
+    
     },
     clearplan: (state, action) => {
       state.plan = [];
@@ -143,7 +143,7 @@ export const cartSlice = createSlice({
       state.Otp = [];
     },
     filterdata:(state,action)=>{
-      console.log(action);
+    
       state.filtercart.push({...action.payload});
     },
     Addressselect:(state,action)=>{

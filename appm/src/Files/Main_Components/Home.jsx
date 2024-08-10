@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { addCart, cleareAddress, clearplan } from "../redux/CartSlice";
-import { Logincart } from "../redux/CartSlice";
+import { addCart, clearplan } from "../redux/CartSlice";
+
 
 import { useFormik } from "formik";
 import { signup } from "../Schema";
@@ -18,7 +18,6 @@ import "owl.carousel/dist/assets/owl.theme.default.css";
 import Pack from "../Smallcompo/Pack";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getLorem } from "../redux/Product";
 import CurrentUser from "../Condition/CurrentUser";
 import { getcart } from "../redux/Cart/Cart";
 import { getAccessories, getEnergizer, getSlider } from "../redux/Home/Product";
@@ -51,13 +50,7 @@ function Home() {
     dispatch(getSlider());
     dispatch(getcart());
   }, [dispatch]);
-  useEffect(() => {
-    if (LoginUser.length === 0) {
-      call5();
-    } else {
-      call5();
-    }
-  }, [LoginUser]);
+ 
 
   useEffect(() => {
     LoginUser.map((val) => {
@@ -135,18 +128,7 @@ function Home() {
     });
   };
 
-  const call5 = () => {
-    fetch("http://localhost/cartshow.php")
-      .then((val) => {
-        return val.json();
-      })
-      .then((res) => {
-        setcartdata(res);
-      });
-  };
-  useEffect(() => {
-    call5();
-  }, []);
+
 
   const {
     values,
@@ -277,6 +259,7 @@ function Home() {
               </div>
             </div>
           </div>
+
           <ToastContainer
             autoClose={3000} // Toast will close after 3 seconds
             pauseOnHover={true} // Pause the toast auto-close timer when hovered
@@ -476,7 +459,7 @@ function Home() {
                                         ProductType,
                                       })
                                     );
-                                    call5();
+                                    // call5();
                                   } else {
                                     handlecartdata(data);
                                     // dispatch(Logincart( data ));
@@ -540,7 +523,7 @@ function Home() {
                               localStorage.setItem("Detailtype", "Accessories");
                             }}
                           >
-                            <img src={Img} alt="" className=" ml-12" />
+                            <img src={Img} alt="" className=" " />
                           </a>
                         </div>
                         <div className="content">
@@ -605,7 +588,7 @@ function Home() {
                                         ProductType,
                                       })
                                     );
-                                    call5();
+                                    // call5();
                                   } else {
                                     handalAccessories(data);
                                   }

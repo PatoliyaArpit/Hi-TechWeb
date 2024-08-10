@@ -6,11 +6,9 @@ import { useNavigate } from "react-router-dom";
 const Errorpage = () => {
   const navigate = useNavigate();
 
-
-
   const redirecthome = () => {
     navigate("/Home");
-    // alert("hello")
+    
   };
   return (
     <>

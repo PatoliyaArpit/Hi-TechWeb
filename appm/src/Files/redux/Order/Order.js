@@ -17,7 +17,7 @@ export const getOrder = createAsyncThunk(
 const OrderSlice = createSlice({
   name: 'Order',
   initialState: {
-    data: [],
+    Order: null,
     isSuccess: false,
     message: '',
     loading: false,
@@ -30,7 +30,7 @@ const OrderSlice = createSlice({
       })
       .addCase(getOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.Order = action.payload;
         state.isSuccess = true;
       })
       .addCase(getOrder.rejected, (state, action) => {

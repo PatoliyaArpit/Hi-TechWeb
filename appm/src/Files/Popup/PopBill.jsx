@@ -7,37 +7,23 @@ import { getOrder } from "../redux/Order/Order";
 
 function PopBill({ isOpen, onClose }) {
   const dispatch = useDispatch();
-  const orderdata = useSelector((state) => state.Order);
+  const {Order} = useSelector((state) => state.Order);
 
-  const [Order, setOrder] = useState([]);
+ 
   const [FilterOrder, setFilterOrder] = useState([]);
   const orderId = localStorage.getItem("OrderId");
   const componentRef = useRef();
-  console.log(Order, "bill");
+  
  
-  useEffect(() => {
-    
-    setOrder(orderdata.data);
-  }, [dispatch, orderdata]);
+
 
   useEffect(()=>{
     dispatch(getOrder());
   },[dispatch])
-  // const call=()=>{
-  //       fetch("http://localhost/Ordershow.php")
-  //       .then((result)=>{
-  //         return result.json()
-  //       })
-  //       .then((res)=>{
-  //         setOrder(res)
-  //       })
-  // }
-  // useEffect(()=>{
-  // call()
-  // },[dispatch])
+
 
   useEffect(() => {
-    const filteredOrder = Order.filter((val) => val.Id === orderId);
+    const filteredOrder = Order?.filter((val) => val.Id === orderId);
     setFilterOrder(filteredOrder);
   }, [Order, orderId]);
 
@@ -46,7 +32,7 @@ function PopBill({ isOpen, onClose }) {
     content: () => componentRef.current,
     
   });
-  console.log(handlePrint,"print")
+  
 
   return (
     <section className={`modal-wrapperbill ${isOpen ? "" : "hidden"}`}>
@@ -59,7 +45,7 @@ function PopBill({ isOpen, onClose }) {
           style={{ margin: "0 0 0 100%" }}
           onClick={onClose}
         ></button>
-        {FilterOrder.map((val) => {
+        {FilterOrder?.map((val) => {
           return (
             <div className="page-content container" key={val.Id}>
               <div className="page-header text-blue-d2">

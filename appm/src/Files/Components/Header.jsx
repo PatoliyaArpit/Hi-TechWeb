@@ -10,10 +10,12 @@ import PoppopEmail from "../Popup/PoppopEmail";
 import PoppopNewPass from "../Popup/PoppopNewPass";
 import { RxHamburgerMenu } from "react-icons/rx";
 import Sidebar from "../Popup/Sidebar";
+import { getcart } from "../redux/Cart/Cart";
 
 
 
 const Header = ( props ) => {
+  const dispatch=useDispatch()
   const [toggleMenu, settoggleMenu] = useState(false);
   
   const cartitem = useSelector((state) => state.cart.cart);
@@ -23,11 +25,12 @@ const Header = ( props ) => {
   const [popR, setpopR] = useState(false);
   const [popEmail, setpopEmail] = useState(false);
   const [popNewp, setpopNewp] = useState(false);
-  const [cartdata, setcartdata] = useState([]);
   const [LoginId, setLoginId] = useState([]);
   const [Final, setFinal] = useState([]);
   const [Loginname, setLoginname] = useState("");
   const [data, setdata] = useState("");
+
+  const {Cart}=useSelector((state)=>state.Cartdata)
 
 
   useEffect(() => {
@@ -53,20 +56,20 @@ const Header = ( props ) => {
 
   useEffect(() => {
     if (LoginId !== null) {
-      const Finalcart = cartdata.filter((val) => val.UserId === LoginId);
-      if (UserLogin.length === 0) {
+      const Finalcart = Cart?.filter((val) => val.UserId === LoginId);
+      if (UserLogin?.length === 0) {
         setFinal(cartitem);
-        // call1();
+        
       } else {
         setFinal(Finalcart);
-        // call1();
+        
       }
     }
-  }, [cartdata, LoginId]);
+  }, [Cart, LoginId]);
 
   const btn = () => {
     setpop(false);
-    call1();
+   
   };
   const btnr = () => {
     setpopR(true);
@@ -101,19 +104,7 @@ const Header = ( props ) => {
   const clickup = () => {
     window.scroll(0, 0);
   };
-
-  const call1 = () => {
-    fetch("http://localhost/cartshow.php")
-      .then((res) => {
-        return res.json();
-      })
-      .then((result) => {
-        setcartdata(result);
-      });
-  };
-  useEffect(() => {
-    call1();
-  },[props]);
+ 
  
 
   return (
@@ -205,7 +196,7 @@ const Header = ( props ) => {
                           className="link nav-link"
                         >
                           <i className="fa-solid fa-cart-shopping" />{" "}
-                          {Final.length}
+                          {Final?.length}
                         </Link>
                         {/* <Link as={Link} to="/MyAdmin" className="link nav-link">admi</Link> */}
                       </div>
@@ -376,7 +367,7 @@ const Header = ( props ) => {
                           className="link nav-link"
                         >
                           <i className="fa-solid fa-cart-shopping" />{" "}
-                          {Final.length}
+                          {Final?.length}
                         </Link>
                         {/* <Link as={Link} to="/MyAdmin" className="link nav-link">admi</Link> */}
                       </div>

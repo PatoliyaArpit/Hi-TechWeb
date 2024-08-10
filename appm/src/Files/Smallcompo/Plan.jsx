@@ -38,7 +38,7 @@ const Plan = () => {
     const Price1 = Number(planPrice * Quantity);
     const Finalp = Price1 + 0;
     setFprice(Finalp);
-  });
+  },[planPrice,Quantity]);
 
   useEffect(() => {
     dispetch(getpackdetail());
@@ -91,6 +91,7 @@ const Plan = () => {
         Img: state.Img,
         Title: state.Title,
         quantity: Quantity,
+
       })
     );
     navigate("/Order");
@@ -98,31 +99,19 @@ const Plan = () => {
 
   useEffect(() => {
     if (state?.Title && packdetails?.length) {
-      const Pack = packdetails.filter((val) => val.Main_title === state.Title);
+      const Pack = packdetails.filter((val) => val.Pack_Id === state.Id);
 
       setpackdata(Pack);
     }
   }, [state, packdetails]);
-  // const call3 = () => {
-  //   fetch("http://localhost/pack.php")
-  //     .then((result) => {
-  //       return result.json();
-  //     })
-  //     .then((res) => {
-  //       setplandata(res);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   call3();
-  // }, []);
+ 
   useEffect(() => {
     const filterplan = pack?.filter((val) => val.Title === state.Title);
     filterplan?.map((val) => {
       setplanPrice(val.Price);
     });
     setfilterplan(filterplan);
-  }, [pack]);
+  }, [pack,state]);
 
   const handleincrease = () => {
     setQuantity(Quantity + 1);

@@ -9,7 +9,7 @@ function About() {
 
   useEffect(() => {
     call();
-  }, [data]);
+  }, []);
   const call = () => {
     fetch("http://localhost/About.php")
       .then((result) => {

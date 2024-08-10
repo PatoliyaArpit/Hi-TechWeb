@@ -24,6 +24,7 @@ const Pack = () => {
         Price: item.Price,
         Img: item.Img,
         Quantity: item.quantity,
+        Id:item.Id
       },
     });
     dispatch(plan(item));
@@ -70,7 +71,7 @@ const Pack = () => {
             <div className="bottom">
               <ul className="feature">
                 {packdetails
-                  ?.filter((filter) => filter.Main_title === val.Title)
+                  ?.filter((filter) => filter.Pack_Id === val.Id)
                   ?.map((item, idx) => (
                     <li key={idx}>{item.Product_title}</li>
                   ))}

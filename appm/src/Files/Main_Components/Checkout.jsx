@@ -117,6 +117,7 @@ function Checkout() {
   };
 
   const handleDelete =async (data) => {
+   
     await dispatch(Deletecart(data))
     dispatch(getcart())
     
